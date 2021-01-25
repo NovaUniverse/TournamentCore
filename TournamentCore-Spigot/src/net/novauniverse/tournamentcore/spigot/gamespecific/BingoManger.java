@@ -32,7 +32,7 @@ public class BingoManger extends NovaModule implements Listener {
 
 	@Override
 	public String getName() {
-		return "MCFBingoManager";
+		return "TCBingoManager";
 	}
 
 	@Override

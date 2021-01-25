@@ -31,7 +31,7 @@ public class WinMessageListener extends NovaModule implements Listener{
 		// Bukkit.getServer().broadcastMessage(ChatColor.GREEN + "" + ChatColor.BOLD +
 		// "GAME OVER> " + ChatColor.GOLD + ChatColor.BOLD + "Winning player: " + color
 		// + ChatColor.BOLD + e.getPlayer().getName());
-		LanguageManager.broadcast("mcf.game.gameover.winner.player", color.toString(), e.getPlayer().getName());
+		LanguageManager.broadcast("tournamentcore.game.gameover.winner.player", color.toString(), e.getPlayer().getName());
 	}
 
 	@EventHandler(priority = EventPriority.NORMAL)
@@ -41,6 +41,6 @@ public class WinMessageListener extends NovaModule implements Listener{
 		// Bukkit.getServer().broadcastMessage(ChatColor.GREEN + "" + ChatColor.BOLD +
 		// "GAME OVER> " + ChatColor.GOLD + ChatColor.BOLD + "Winning team: " + color +
 		// ChatColor.BOLD + "Team " + ((MCFTeam) e.getTeam()).getTeamNumber());
-		LanguageManager.broadcast("mcf.game.gameover.winner.team", color.toString(), e.getTeam().getDisplayName());
+		LanguageManager.broadcast("tournamentcore.game.gameover.winner.team", color.toString(), e.getTeam().getDisplayName());
 	}
 }

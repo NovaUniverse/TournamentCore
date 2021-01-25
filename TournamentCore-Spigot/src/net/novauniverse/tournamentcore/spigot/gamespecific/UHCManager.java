@@ -23,7 +23,7 @@ public class UHCManager extends NovaModule implements Listener {
 
 	@Override
 	public String getName() {
-		return "MCFUHCManager";
+		return "TCUHCManager";
 	}
 
 	@Override

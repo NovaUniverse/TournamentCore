@@ -15,7 +15,7 @@ public class DuelCommand extends NovaCommand {
 	public DuelCommand() {
 		super("duel", TournamentCore.getInstance());
 		this.addHelpSubCommand();
-		this.setPermission("mcf.command.duel");
+		this.setPermission("tournamentcore.command.duel");
 		this.setPermissionDefaultValue(PermissionDefault.TRUE);
 		this.setDescription("Send a duel request to a player");
 		this.setAllowedSenders(AllowedSenders.PLAYERS);

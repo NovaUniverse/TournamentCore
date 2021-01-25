@@ -19,7 +19,7 @@ public class AcceptDuelCommand extends NovaCommand {
 	public AcceptDuelCommand() {
 		super("acceptduel", TournamentCore.getInstance());
 		this.setAllowedSenders(AllowedSenders.PLAYERS);
-		this.setPermission("mcf.command.acceptduel");
+		this.setPermission("tournamentcore.command.acceptduel");
 		this.setPermissionDefaultValue(PermissionDefault.TRUE);
 		this.setDescription("Accept a duel request");
 	}

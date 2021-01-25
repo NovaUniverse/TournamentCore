@@ -103,14 +103,14 @@ public class YBorder extends NovaModule implements Listener {
 		decreaseTask.start();
 		damageTask.start();
 
-		LanguageManager.broadcast("mcf.yborder.start");
+		LanguageManager.broadcast("tournamentcore.yborder.start");
 
 		showLimit();
 	}
 
 	@Override
 	public void onDisable() throws Exception {
-		LanguageManager.broadcast("mcf.yborder.remove");
+		LanguageManager.broadcast("tournamentcore.yborder.remove");
 		Task.tryStopTask(decreaseTask);
 		Task.tryStopTask(damageTask);
 		NetherBoardScoreboard.getInstance().clearGlobalLine(SCOREBOARD_LINE);

@@ -132,13 +132,13 @@ public class TournamentCoreTeamManager extends TeamManager implements Listener {
 					if (teamNumber <= 0 || ((TournamentCoreTeam) team).getTeamNumber() != teamNumber) {
 						if (team.getMembers().contains(uuid)) {
 							team.getMembers().remove(uuid);
-							Log.trace("MCFTeamManager", "Removing player with uuid " + uuid.toString() + " from team " + ((TournamentCoreTeam) team).getTeamNumber());
+							Log.trace("TournamentCoreTeamManager", "Removing player with uuid " + uuid.toString() + " from team " + ((TournamentCoreTeam) team).getTeamNumber());
 						}
 					} else {
 						if (teamNumber == ((TournamentCoreTeam) team).getTeamNumber()) {
 							if (!team.getMembers().contains(uuid)) {
 								team.getMembers().add(uuid);
-								Log.trace("MCFTeamManager", "Adding player with uuid " + uuid.toString() + " to team " + ((TournamentCoreTeam) team).getTeamNumber());
+								Log.trace("TournamentCoreTeamManager", "Adding player with uuid " + uuid.toString() + " to team " + ((TournamentCoreTeam) team).getTeamNumber());
 							}
 						}
 					}
@@ -149,7 +149,7 @@ public class TournamentCoreTeamManager extends TeamManager implements Listener {
 			ps.close();
 		} catch (Exception e) {
 			e.printStackTrace();
-			Log.warn("MCFTeamManager", "Failed to update teams");
+			Log.warn("TournamentCoreTeamManager", "Failed to update teams");
 			return;
 		}
 
@@ -171,7 +171,7 @@ public class TournamentCoreTeamManager extends TeamManager implements Listener {
 			ps.close();
 		} catch (Exception e) {
 			e.printStackTrace();
-			Log.warn("MCFTeamManager", "Failed to update team score");
+			Log.warn("TournamentCoreTeamManager", "Failed to update team score");
 			return;
 		}
 
