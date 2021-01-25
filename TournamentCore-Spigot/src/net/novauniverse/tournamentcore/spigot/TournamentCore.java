@@ -10,10 +10,11 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
+import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import net.novauniverse.tournamentcore.commons.TournamentCoreCommons;
@@ -22,7 +23,6 @@ import net.novauniverse.tournamentcore.spigot.command.fly.FlyCommand;
 import net.novauniverse.tournamentcore.spigot.command.halt.HaltCommand;
 import net.novauniverse.tournamentcore.spigot.command.invsee.InvseeCommand;
 import net.novauniverse.tournamentcore.spigot.command.top.TopCommand;
-import net.novauniverse.tournamentcore.spigot.database.TournamentCoreDB;
 import net.novauniverse.tournamentcore.spigot.gamespecific.BingoManger;
 import net.novauniverse.tournamentcore.spigot.gamespecific.UHCManager;
 import net.novauniverse.tournamentcore.spigot.leaderboard.TCLeaderboard;
@@ -32,10 +32,12 @@ import net.novauniverse.tournamentcore.spigot.lobby.duels.command.AcceptDuelComm
 import net.novauniverse.tournamentcore.spigot.lobby.duels.command.DuelCommand;
 import net.novauniverse.tournamentcore.spigot.messages.TCTeamEliminationMessage;
 import net.novauniverse.tournamentcore.spigot.modules.EdibleHeads;
+import net.novauniverse.tournamentcore.spigot.modules.GameListeners;
 import net.novauniverse.tournamentcore.spigot.modules.NoEnderPearlDamage;
 import net.novauniverse.tournamentcore.spigot.modules.PlayerHeadDrop;
 import net.novauniverse.tournamentcore.spigot.modules.PlayerKillCache;
 import net.novauniverse.tournamentcore.spigot.modules.PlayerNameCache;
+import net.novauniverse.tournamentcore.spigot.modules.WinMessageListener;
 import net.novauniverse.tournamentcore.spigot.modules.YBorder;
 import net.novauniverse.tournamentcore.spigot.score.ScoreListener;
 import net.novauniverse.tournamentcore.team.TournamentCoreTeamManager;
@@ -45,60 +47,28 @@ import net.zeeraa.novacore.commons.database.DBCredentials;
 import net.zeeraa.novacore.commons.log.Log;
 import net.zeeraa.novacore.spigot.NovaCore;
 import net.zeeraa.novacore.spigot.command.CommandRegistry;
-import net.zeeraa.novacore.spigot.language.LanguageManager;
 import net.zeeraa.novacore.spigot.language.LanguageReader;
 import net.zeeraa.novacore.spigot.module.ModuleManager;
 import net.zeeraa.novacore.spigot.module.modules.compass.CompassTracker;
 import net.zeeraa.novacore.spigot.module.modules.game.GameManager;
-import net.zeeraa.novacore.spigot.module.modules.game.events.GameEndEvent;
 import net.zeeraa.novacore.spigot.module.modules.game.events.GameLoadedEvent;
-import net.zeeraa.novacore.spigot.module.modules.game.events.GameStartEvent;
 import net.zeeraa.novacore.spigot.module.modules.gamelobby.GameLobby;
 import net.zeeraa.novacore.spigot.module.modules.gui.GUIManager;
 import net.zeeraa.novacore.spigot.module.modules.scoreboard.NetherBoardScoreboard;
-import net.zeeraa.novacore.spigot.utils.BungeecordUtils;
 
 public class TournamentCore extends JavaPlugin implements Listener {
 	private static TournamentCore instance;
 	private static String serverName;
 	private boolean topEnabled;
-
 	private ScoreListener scoreListener;
-
 	private TournamentCoreTeamManager teamManager;
-
 	private String lobbyServer;
-
 	private File sqlFixFile;
 
-	public static TournamentCore getInstance() {
-		return instance;
-	}
-
-	public File getSqlFixFile() {
-		return sqlFixFile;
-	}
-
-	public static String getServerName() {
-		return serverName;
-	}
-
-	public TournamentCoreTeamManager getTeamManager() {
-		return teamManager;
-	}
-
-	public boolean isTopEnabled() {
-		return topEnabled;
-	}
-
-	public void setTopEnabled(boolean topEnabled) {
-		this.topEnabled = topEnabled;
-	}
-
+	// Initialize variables
 	@Override
 	public void onLoad() {
 		TournamentCore.instance = this;
-
 		this.topEnabled = false;
 	}
 
@@ -106,13 +76,17 @@ public class TournamentCore extends JavaPlugin implements Listener {
 	public void onEnable() {
 		saveDefaultConfig();
 
+		// Initialize file variables
 		sqlFixFile = new File(this.getDataFolder().getPath() + File.separator + "sql_fix.sql");
 
 		File gameLobbyFolder = new File(this.getDataFolder().getPath() + File.separator + "GameLobby");
 		File worldFolder = new File(this.getDataFolder().getPath() + File.separator + "Worlds");
 
+		// Server name and lobby name
+		TournamentCore.serverName = getConfig().getString("server_name");
 		this.lobbyServer = getConfig().getString("lobby_server");
 
+		// Try to create the files and folders and load the worlds
 		try {
 			FileUtils.forceMkdir(gameLobbyFolder);
 			FileUtils.forceMkdir(worldFolder);
@@ -128,6 +102,7 @@ public class TournamentCore extends JavaPlugin implements Listener {
 			return;
 		}
 
+		// Language files
 		Log.info("TournamentCore", "Loading language files...");
 		try {
 			LanguageReader.readFromJar(this.getClass(), "/lang/en-us.json");
@@ -135,6 +110,7 @@ public class TournamentCore extends JavaPlugin implements Listener {
 			e.printStackTrace();
 		}
 
+		// Setup win score
 		int[] winScore;
 		String winScoreString = "Win score: ";
 
@@ -149,10 +125,12 @@ public class TournamentCore extends JavaPlugin implements Listener {
 
 		Log.info("TournamentCore", winScoreString);
 
+		// Require NetherBoardScoreboard
 		if (ModuleManager.isDisabled(NetherBoardScoreboard.class)) {
 			ModuleManager.enable(NetherBoardScoreboard.class);
 		}
 
+		// Connect to the database
 		DBCredentials dbCredentials = new DBCredentials(getConfig().getString("mysql.driver"), getConfig().getString("mysql.host"), getConfig().getString("mysql.username"), getConfig().getString("mysql.password"), getConfig().getString("mysql.database"));
 
 		try {
@@ -179,6 +157,8 @@ public class TournamentCore extends JavaPlugin implements Listener {
 		ModuleManager.loadModule(PlayerNameCache.class, true);
 		ModuleManager.loadModule(PlayerKillCache.class, true);
 		ModuleManager.loadModule(NoEnderPearlDamage.class, true);
+		ModuleManager.loadModule(WinMessageListener.class, true);
+		ModuleManager.loadModule(GameListeners.class, true);
 
 		ModuleManager.loadModule(PlayerHeadDrop.class);
 		ModuleManager.loadModule(EdibleHeads.class);
@@ -192,7 +172,7 @@ public class TournamentCore extends JavaPlugin implements Listener {
 		CommandRegistry.registerCommand(new InvseeCommand());
 		CommandRegistry.registerCommand(new TopCommand());
 
-		// Config values for heads
+		// Configuration values for heads
 		if (getConfig().getBoolean("enable_head_drops")) {
 			ModuleManager.enable(PlayerHeadDrop.class);
 		}
@@ -224,7 +204,7 @@ public class TournamentCore extends JavaPlugin implements Listener {
 
 			ModuleManager.require(GUIManager.class);
 
-			//CitizensAPI.getTraitFactory().registerTrait(TraitInfo.create(MerchantTrait.class).withName("MerchantTrait"));
+			// CitizensAPI.getTraitFactory().registerTrait(TraitInfo.create(MerchantTrait.class).withName("MerchantTrait"));
 
 			ModuleManager.loadModule(DuelsManager.class, true);
 			CommandRegistry.registerCommand(new AcceptDuelCommand());
@@ -243,75 +223,50 @@ public class TournamentCore extends JavaPlugin implements Listener {
 		}
 	}
 
-	@EventHandler(priority = EventPriority.NORMAL)
-	public void onGameLoaded(GameLoadedEvent e) {
-		NetherBoardScoreboard.getInstance().setGlobalLine(0, ChatColor.YELLOW + "" + ChatColor.BOLD + e.getGame().getDisplayName());
+	@Override
+	public void onDisable() {
+		// Cancel tasks and listeners
+		Bukkit.getScheduler().cancelTasks(this);
+		HandlerList.unregisterAll((Plugin) this);
 
-		if (e.getGame().getName().equalsIgnoreCase("bingo")) {
-			Log.info("TournamentCore", "Bingo manager enabled");
-			ModuleManager.enable(BingoManger.class);
-			topEnabled = true;
-			Log.info("TournamentCore", "/top command enabled");
-		}
-
-		if (e.getGame().getName().equalsIgnoreCase("uhc")) {
-			Log.info("TournamentCore", "UHC manager enabled");
-			ModuleManager.enable(UHCManager.class);
-			topEnabled = true;
-			Log.info("TournamentCore", "/top command enabled");
-		}
-	}
-
-	@EventHandler(priority = EventPriority.NORMAL)
-	public void onGameStart(GameStartEvent e) {
+		// Close database connection
 		try {
-			TournamentCoreDB.setActiveServer(serverName);
-		} catch (Exception ex) {
-			Log.error("Failed to set active server name");
-			ex.printStackTrace();
-		}
-	}
-
-	@EventHandler(priority = EventPriority.NORMAL)
-	public void onGameEnd(GameEndEvent e) {
-		try {
-			TournamentCoreDB.setActiveServer(null);
-		} catch (Exception ex) {
-			Log.error("Failed to reset active server name");
-			ex.printStackTrace();
-		}
-
-		Bukkit.getScheduler().scheduleSyncDelayedTask(this, new Runnable() {
-			@Override
-			public void run() {
-				for (Player p : Bukkit.getServer().getOnlinePlayers()) {
-					p.sendMessage(LanguageManager.getString(p, "tournamentcore.game.sending_you_to_lobby_10_seconds"));
+			if (TournamentCoreCommons.getDBConnection() != null) {
+				if (TournamentCoreCommons.getDBConnection().isConnected()) {
+					TournamentCoreCommons.getDBConnection().close();
 				}
-
-				Bukkit.getScheduler().scheduleSyncDelayedTask(TournamentCore.getInstance(), new Runnable() {
-					@Override
-					public void run() {
-						for (Player player : Bukkit.getServer().getOnlinePlayers()) {
-							Bukkit.getScheduler().runTaskLater(TournamentCore.getInstance(), new Runnable() {
-								@Override
-								public void run() {
-									BungeecordUtils.sendToServer(player, lobbyServer);
-								}
-							}, 4L);
-						}
-
-						Bukkit.getScheduler().scheduleSyncDelayedTask(TournamentCore.getInstance(), new Runnable() {
-							@Override
-							public void run() {
-								for (Player p : Bukkit.getServer().getOnlinePlayers()) {
-									p.kickPlayer(LanguageManager.getString(p, "tournamentcore.game.server.restarting", e.getGame()));
-								}
-								Bukkit.getServer().shutdown();
-							}
-						}, 40L);
-					}
-				}, 200L);
 			}
-		}, 100L);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	// Getters and setters
+	public static TournamentCore getInstance() {
+		return instance;
+	}
+
+	public File getSqlFixFile() {
+		return sqlFixFile;
+	}
+
+	public static String getServerName() {
+		return serverName;
+	}
+
+	public TournamentCoreTeamManager getTeamManager() {
+		return teamManager;
+	}
+
+	public boolean isTopEnabled() {
+		return topEnabled;
+	}
+
+	public void setTopEnabled(boolean topEnabled) {
+		this.topEnabled = topEnabled;
+	}
+
+	public String getLobbyServer() {
+		return lobbyServer;
 	}
 }
