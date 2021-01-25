@@ -53,13 +53,9 @@ public class FlyCommand extends NovaCommand {
 
 		boolean newState = !target.isFlying();
 
-		if (newState) {
-			target.setAllowFlight(newState);
-		}
+		target.setAllowFlight(newState);
 		target.setFlying(newState);
-		if (!newState) {
-			target.setAllowFlight(newState);
-		}
+		target.setAllowFlight(newState);
 
 		sender.sendMessage(ChatColor.GOLD + "Flight " + (newState ? "enabled" : "disabled") + (useTarget ? " for " + target.getName() : ""));
 
