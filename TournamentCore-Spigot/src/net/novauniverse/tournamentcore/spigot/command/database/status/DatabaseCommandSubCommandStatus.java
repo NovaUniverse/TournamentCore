@@ -26,8 +26,8 @@ public class DatabaseCommandSubCommandStatus extends NovaSubCommand {
 			boolean connected = TournamentCoreCommons.getDBConnection().isConnected();
 			boolean working = TournamentCoreCommons.getDBConnection().testQuery();
 			sender.sendMessage(ChatColor.GOLD + "===== Database status =====");
-			sender.sendMessage(ChatColor.GOLD + "Connected: " + (connected ? ChatColor.GREEN + "Yes" : ChatColor.RED + "No"));
-			sender.sendMessage(ChatColor.GOLD + "Test query: " + (working ? ChatColor.GREEN + "Ok" : ChatColor.RED + "Failure"));
+			sender.sendMessage(ChatColor.GOLD + "Connected: " + (connected ? ChatColor.GREEN + "Yes" : ChatColor.DARK_RED + "No"));
+			sender.sendMessage(ChatColor.GOLD + "Test query: " + (working ? ChatColor.GREEN + "Ok" : ChatColor.DARK_RED + "Failure"));
 			sender.sendMessage(ChatColor.GOLD + "===========================");
 			return true;
 		} catch (Exception e) {
