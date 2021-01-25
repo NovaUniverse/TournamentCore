@@ -1,0 +1,8 @@
+main: net.novauniverse.tournamentcore.spigot.TournamentCore
+name: TournamentCore
+description: TournamentCore
+version: 1.0
+api-version: 1.13
+
+depend: [NovaCore, HolographicDisplays]
+loadbefore: [NovaGamesTarget]

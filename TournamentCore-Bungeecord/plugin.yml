@@ -1,0 +1,5 @@
+main: net.novauniverse.tournamentcore.bungee.TournamentCore
+name: TournamentCore
+version: 1.0.0
+authors: [Zeeraa]
+depends: [NovaCore]
