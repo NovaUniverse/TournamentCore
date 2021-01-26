@@ -7,7 +7,7 @@ mysql:
     host: jdbc:mysql://localhost
     username: root
     password: root
-    database: mc_tournament
+    database: minecraft_tournament
 
 # =================================
 # -=-=-= Bungeecord settings =-=-=-

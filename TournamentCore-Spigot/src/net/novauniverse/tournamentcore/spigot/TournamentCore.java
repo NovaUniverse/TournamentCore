@@ -34,7 +34,9 @@ import net.novauniverse.tournamentcore.spigot.modules.PlayerKillCache;
 import net.novauniverse.tournamentcore.spigot.modules.PlayerNameCache;
 import net.novauniverse.tournamentcore.spigot.modules.WinMessageListener;
 import net.novauniverse.tournamentcore.spigot.modules.YBorder;
+import net.novauniverse.tournamentcore.spigot.pluginmessagelistener.TCPluginMessageListnener;
 import net.novauniverse.tournamentcore.spigot.score.ScoreListener;
+import net.novauniverse.tournamentcore.spigot.score.ScoreManager;
 import net.novauniverse.tournamentcore.team.TournamentCoreTeamManager;
 import net.novauniverse.tournamentcore.tracker.TCCompassTracker;
 import net.zeeraa.novacore.commons.database.DBConnection;
@@ -153,6 +155,8 @@ public class TournamentCore extends JavaPlugin implements Listener {
 		ModuleManager.loadModule(NoEnderPearlDamage.class, true);
 		ModuleManager.loadModule(WinMessageListener.class, true);
 		ModuleManager.loadModule(GameListeners.class, true);
+		ModuleManager.loadModule(TCLeaderboard.class, true);
+		ModuleManager.loadModule(ScoreManager.class, true);
 
 		ModuleManager.loadModule(PlayerHeadDrop.class);
 		ModuleManager.loadModule(EdibleHeads.class);
@@ -215,6 +219,9 @@ public class TournamentCore extends JavaPlugin implements Listener {
 			CompassTracker.getInstance().setCompassTrackerTarget(new TCCompassTracker());
 			CompassTracker.getInstance().setStrictMode(true);
 		}
+		
+		this.getServer().getMessenger().registerOutgoingPluginChannel(this, "TCData");
+	    this.getServer().getMessenger().registerIncomingPluginChannel(this, "TCData", new TCPluginMessageListnener());
 	}
 
 	@Override

@@ -10,6 +10,7 @@ import com.sun.net.httpserver.HttpServer;
 import net.novauniverse.tournamentcore.bungee.webapi.handlers.BroadcastHandler;
 import net.novauniverse.tournamentcore.bungee.webapi.handlers.SendPlayerHandler;
 import net.novauniverse.tournamentcore.bungee.webapi.handlers.SendPlayersHandler;
+import net.novauniverse.tournamentcore.bungee.webapi.handlers.StartGameHandler;
 import net.novauniverse.tournamentcore.bungee.webapi.handlers.StatusHandler;
 
 @SuppressWarnings("restriction")
@@ -27,6 +28,8 @@ public class WebServer {
 
 		httpServer.createContext("/api/send_player", new SendPlayerHandler());
 		httpServer.createContext("/api/send_players", new SendPlayersHandler());
+		
+		httpServer.createContext("/api/start_game", new StartGameHandler());
 
 		httpServer.setExecutor(null);
 		httpServer.start();

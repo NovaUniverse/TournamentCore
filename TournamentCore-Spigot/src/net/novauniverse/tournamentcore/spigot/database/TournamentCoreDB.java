@@ -14,7 +14,7 @@ public class TournamentCoreDB {
 	public static String getData(String key) {
 		String result = null;
 		try {
-			String sql = "SELECT data_value FROM mcf_data WHERE data_key = ?";
+			String sql = "SELECT data_value FROM tc_data WHERE data_key = ?";
 			PreparedStatement ps = TournamentCoreCommons.getDBConnection().getConnection().prepareStatement(sql);
 
 			ps.setString(1, key);
@@ -35,7 +35,7 @@ public class TournamentCoreDB {
 
 	public static boolean setData(String key, String value) {
 		try {
-			String sql = "UPDATE mcf_data SET data_value = ? WHERE data_key = ?";
+			String sql = "UPDATE tc_data SET data_value = ? WHERE data_key = ?";
 			PreparedStatement ps = TournamentCoreCommons.getDBConnection().getConnection().prepareStatement(sql);
 
 			ps.setString(1, value);
