@@ -47,6 +47,6 @@ public class EdibleHeads extends NovaModule implements Listener {
 
 	@Override
 	public String getName() {
-		return "EdibleHeads";
+		return "TCEdibleHeads";
 	}
 }

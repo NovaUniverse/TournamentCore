@@ -8,9 +8,11 @@ import java.util.Map;
 import com.sun.net.httpserver.HttpServer;
 
 import net.novauniverse.tournamentcore.bungee.webapi.handlers.BroadcastHandler;
+import net.novauniverse.tournamentcore.bungee.webapi.handlers.ResetHandler;
 import net.novauniverse.tournamentcore.bungee.webapi.handlers.SendPlayerHandler;
 import net.novauniverse.tournamentcore.bungee.webapi.handlers.SendPlayersHandler;
 import net.novauniverse.tournamentcore.bungee.webapi.handlers.StartGameHandler;
+import net.novauniverse.tournamentcore.bungee.webapi.handlers.StaticFileHandler;
 import net.novauniverse.tournamentcore.bungee.webapi.handlers.StatusHandler;
 
 @SuppressWarnings("restriction")
@@ -19,7 +21,7 @@ public class WebServer {
 
 	private HttpServer httpServer;
 
-	public WebServer(int port) throws IOException {
+	public WebServer(int port, String appRoot) throws IOException {
 		httpServer = HttpServer.create(new InetSocketAddress(port), 0);
 
 		httpServer.createContext("/api/status", new StatusHandler());
@@ -29,7 +31,12 @@ public class WebServer {
 		httpServer.createContext("/api/send_player", new SendPlayerHandler());
 		httpServer.createContext("/api/send_players", new SendPlayersHandler());
 		
+		httpServer.createContext("/api/reset", new ResetHandler());
+		
 		httpServer.createContext("/api/start_game", new StartGameHandler());
+		
+		StaticFileHandler sfh = new StaticFileHandler("/app/", appRoot, "index.html");
+		httpServer.createContext("/app", sfh);
 
 		httpServer.setExecutor(null);
 		httpServer.start();

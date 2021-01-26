@@ -35,7 +35,7 @@ public class YBorder extends NovaModule implements Listener {
 
 	@Override
 	public String getName() {
-		return "YBorder";
+		return "TCYBorder";
 	}
 
 	@Override

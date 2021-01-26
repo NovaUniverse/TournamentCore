@@ -15,7 +15,7 @@ import net.zeeraa.novacore.spigot.teams.Team;
 public class WinMessageListener extends NovaModule implements Listener{
 	@Override
 	public String getName() {
-		return "WinMessageListener";
+		return "TCWinMessageListener";
 	}
 	
 	@EventHandler(priority = EventPriority.NORMAL)

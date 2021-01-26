@@ -29,7 +29,7 @@ public class PlayerNameCache extends NovaModule implements Listener {
 	
 	@Override
 	public String getName() {
-		return "MCFPlayerNameCache";
+		return "TCPlayerNameCache";
 	}
 
 	@Override

@@ -40,6 +40,6 @@ public class PlayerHeadDrop extends NovaModule implements Listener {
 
 	@Override
 	public String getName() {
-		return "PlayerHeadDrop";
+		return "TCPlayerHeadDrop";
 	}
 }

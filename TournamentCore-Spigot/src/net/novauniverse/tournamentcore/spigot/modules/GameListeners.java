@@ -24,7 +24,7 @@ import net.zeeraa.novacore.spigot.utils.BungeecordUtils;
 public class GameListeners extends NovaModule implements Listener {
 	@Override
 	public String getName() {
-		return "GameListeners";
+		return "TCGameListeners";
 	}
 	
 	@EventHandler(priority = EventPriority.NORMAL)

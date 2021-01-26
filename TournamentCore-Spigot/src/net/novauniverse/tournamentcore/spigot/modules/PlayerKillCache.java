@@ -29,7 +29,7 @@ public class PlayerKillCache extends NovaModule implements Listener {
 	
 	@Override
 	public String getName() {
-		return "MCFPlayerKillCache";
+		return "TCPlayerKillCache";
 	}
 
 	@Override

@@ -22,6 +22,6 @@ public class NoEnderPearlDamage extends NovaModule implements Listener {
 
 	@Override
 	public String getName() {
-		return "NoEnderPearlDamage";
+		return "TCNoEnderPearlDamage";
 	}
 }

@@ -1,6 +1,9 @@
 package net.novauniverse.tournamentcore.bungee;
 
+import java.io.File;
 import java.sql.SQLException;
+
+import org.apache.commons.io.FileUtils;
 
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.plugin.Listener;
@@ -17,11 +20,17 @@ public class TournamentCore extends NovaPlugin implements Listener {
 	private static TournamentCore instance;
 
 	private WebServer webServer;
+	
+	private String tounamentName;
 
 	public static TournamentCore getInstance() {
 		return instance;
 	}
 
+	public String getTounamentName() {
+		return tounamentName;
+	}
+	
 	@Override
 	public void onLoad() {
 		TournamentCore.instance = this;
@@ -47,13 +56,23 @@ public class TournamentCore extends NovaPlugin implements Listener {
 			e.printStackTrace();
 			return;
 		}
+		
+		tounamentName = TournamentCoreCommons.getTournamentName();
 
 		ProxyServer.getInstance().getPluginManager().registerListener(this, this);
 		ProxyServer.getInstance().getPluginManager().registerListener(this, new ChatLog());
 		ProxyServer.getInstance().getPluginManager().registerListener(this, new TCPluginMessageListener());
 
+		File wwwAppFile = new File(getDataFolder().getPath() + File.separator + "www_app");
+
 		try {
-			webServer = new WebServer(8123);
+			FileUtils.forceMkdir(wwwAppFile);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		try {
+			webServer = new WebServer(8123, wwwAppFile.getPath());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

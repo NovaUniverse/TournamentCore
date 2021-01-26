@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.apache.commons.io.FileUtils;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.event.HandlerList;
@@ -28,10 +29,13 @@ import net.novauniverse.tournamentcore.spigot.lobby.duels.command.DuelCommand;
 import net.novauniverse.tournamentcore.spigot.messages.TCTeamEliminationMessage;
 import net.novauniverse.tournamentcore.spigot.modules.EdibleHeads;
 import net.novauniverse.tournamentcore.spigot.modules.GameListeners;
+import net.novauniverse.tournamentcore.spigot.modules.GoldenHead;
 import net.novauniverse.tournamentcore.spigot.modules.NoEnderPearlDamage;
 import net.novauniverse.tournamentcore.spigot.modules.PlayerHeadDrop;
 import net.novauniverse.tournamentcore.spigot.modules.PlayerKillCache;
+import net.novauniverse.tournamentcore.spigot.modules.PlayerListener;
 import net.novauniverse.tournamentcore.spigot.modules.PlayerNameCache;
+import net.novauniverse.tournamentcore.spigot.modules.TCScoreboard;
 import net.novauniverse.tournamentcore.spigot.modules.WinMessageListener;
 import net.novauniverse.tournamentcore.spigot.modules.YBorder;
 import net.novauniverse.tournamentcore.spigot.pluginmessagelistener.TCPluginMessageListnener;
@@ -60,6 +64,7 @@ public class TournamentCore extends JavaPlugin implements Listener {
 	private TournamentCoreTeamManager teamManager;
 	private String lobbyServer;
 	private File sqlFixFile;
+	private String tournamentName;
 
 	// Initialize variables
 	@Override
@@ -142,12 +147,21 @@ public class TournamentCore extends JavaPlugin implements Listener {
 			Bukkit.getPluginManager().disablePlugin(this);
 			return;
 		}
+		
+		// Get tournament name
+		tournamentName = TournamentCoreCommons.getTournamentName();
 
 		// Setup teams
 		teamManager = new TournamentCoreTeamManager();
 
 		NovaCore.getInstance().setTeamManager(teamManager);
 		GameManager.getInstance().setUseTeams(true);
+
+		// Scoreboard
+		ModuleManager.require(NetherBoardScoreboard.class);
+
+		NetherBoardScoreboard.getInstance().setDefaultTitle(ChatColor.translateAlternateColorCodes('§', tournamentName));
+		NetherBoardScoreboard.getInstance().setLineCount(15);
 
 		// Register modules
 		ModuleManager.loadModule(PlayerNameCache.class, true);
@@ -157,6 +171,9 @@ public class TournamentCore extends JavaPlugin implements Listener {
 		ModuleManager.loadModule(GameListeners.class, true);
 		ModuleManager.loadModule(TCLeaderboard.class, true);
 		ModuleManager.loadModule(ScoreManager.class, true);
+		ModuleManager.loadModule(GoldenHead.class, true);
+		ModuleManager.loadModule(TCScoreboard.class, true);
+		ModuleManager.loadModule(PlayerListener.class, true);
 
 		ModuleManager.loadModule(PlayerHeadDrop.class);
 		ModuleManager.loadModule(EdibleHeads.class);
@@ -218,10 +235,12 @@ public class TournamentCore extends JavaPlugin implements Listener {
 
 			CompassTracker.getInstance().setCompassTrackerTarget(new TCCompassTracker());
 			CompassTracker.getInstance().setStrictMode(true);
+
+			Log.info("TournamentCore", "Game lobby map: " + GameLobby.getInstance().getActiveMap());
 		}
-		
+
 		this.getServer().getMessenger().registerOutgoingPluginChannel(this, "TCData");
-	    this.getServer().getMessenger().registerIncomingPluginChannel(this, "TCData", new TCPluginMessageListnener());
+		this.getServer().getMessenger().registerIncomingPluginChannel(this, "TCData", new TCPluginMessageListnener());
 	}
 
 	@Override
