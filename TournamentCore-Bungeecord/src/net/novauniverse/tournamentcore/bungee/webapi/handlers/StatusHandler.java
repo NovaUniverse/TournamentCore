@@ -1,6 +1,5 @@
 package net.novauniverse.tournamentcore.bungee.webapi.handlers;
 
-import java.awt.Toolkit;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.sql.PreparedStatement;

@@ -34,6 +34,14 @@ $(function () {
 		}
 	});
 
+	$("#link_team_editor").on("click", function () {
+		$.getJSON("/api/export_team_data", function (data) {
+			setCookie("exported_team_data", JSON.stringify(data.teams_data), 1);
+			
+			window.open("/app/team_editor/");
+		});
+	});
+
 	$("#link_start_game").on("click", function () {
 		$('#start_game_modal').modal('show');
 	});
@@ -162,6 +170,28 @@ function update() {
 			}
 		});
 	});
+}
+
+function setCookie(cname, cvalue, exdays) {
+	var d = new Date();
+	d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+	var expires = "expires=" + d.toUTCString();
+	document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+}
+
+function getCookie(cname) {
+	var name = cname + "=";
+	var ca = document.cookie.split(';');
+	for (var i = 0; i < ca.length; i++) {
+		var c = ca[i];
+		while (c.charAt(0) == ' ') {
+			c = c.substring(1);
+		}
+		if (c.indexOf(name) == 0) {
+			return c.substring(name.length, c.length);
+		}
+	}
+	return "";
 }
 
 function showInfo(message) {

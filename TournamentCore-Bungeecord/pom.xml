@@ -25,6 +25,7 @@
 				<includes>
 					<include>plugin.yml</include>
 					<include>config.yml</include>
+					<include>TournamentCore-Team-Editor/**/*.*</include>
 				</includes>
 			</resource>
 		</resources>
@@ -165,6 +166,12 @@
 			<version>1.16-R0.2-SNAPSHOT</version>
 			<type>javadoc</type>
 			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+			<version>3.11</version>
 		</dependency>
 	</dependencies>
 </project>

@@ -8,12 +8,14 @@ import java.util.Map;
 import com.sun.net.httpserver.HttpServer;
 
 import net.novauniverse.tournamentcore.bungee.webapi.handlers.BroadcastHandler;
+import net.novauniverse.tournamentcore.bungee.webapi.handlers.ExportTeamDataHandler;
 import net.novauniverse.tournamentcore.bungee.webapi.handlers.ResetHandler;
 import net.novauniverse.tournamentcore.bungee.webapi.handlers.SendPlayerHandler;
 import net.novauniverse.tournamentcore.bungee.webapi.handlers.SendPlayersHandler;
 import net.novauniverse.tournamentcore.bungee.webapi.handlers.StartGameHandler;
 import net.novauniverse.tournamentcore.bungee.webapi.handlers.StaticFileHandler;
 import net.novauniverse.tournamentcore.bungee.webapi.handlers.StatusHandler;
+import net.novauniverse.tournamentcore.bungee.webapi.handlers.UpploadTeamHandler;
 
 @SuppressWarnings("restriction")
 public class WebServer {
@@ -35,6 +37,10 @@ public class WebServer {
 		
 		httpServer.createContext("/api/start_game", new StartGameHandler());
 		
+		httpServer.createContext("/api/export_team_data", new ExportTeamDataHandler());
+		
+		httpServer.createContext("/api/uppload_team", new UpploadTeamHandler());
+		
 		StaticFileHandler sfh = new StaticFileHandler("/app/", appRoot, "index.html");
 		httpServer.createContext("/app", sfh);
 
@@ -50,7 +56,7 @@ public class WebServer {
 	 * returns the url parameters in a map
 	 * 
 	 * @param query The query
-	 * @return map
+	 * @return map result
 	 */
 	public static Map<String, String> queryToMap(String query) {
 		try {
