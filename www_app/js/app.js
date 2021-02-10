@@ -46,6 +46,11 @@ $(function () {
 		$('#reset_modal').modal('show');
 	});
 
+	$("#link_rename_tournament").on("click", function () {
+		$('#rename_tournament_modal').modal('show');
+	});
+
+
 	$("#link_broadcast_message").on("click", function () {
 		$('#broadcast_modal').modal('show');
 	});
@@ -69,16 +74,23 @@ $(function () {
 	})
 
 	$("#link_clear_player_data").on("click", function () {
+		$("#remove_player_data_modal").modal("show");
+	});
+
+	$("#btn_remove_player_data").on("click", function () {
 		if (confirm("You are about to delete all player data! This will remove all players and their score from the database. After this players might need to reconnect")) {
-			$.getJSON("/api/clear_player_data", function (data) {
+			$.getJSON("/api/clear_players", function (data) {
 				if (data.success) {
 					showInfo("Player data cleared");
+					$("#remove_player_data_modal").modal("hide");
 				} else {
 					showError(data.message);
 				}
 			});
 		}
 	});
+
+	
 
 	$("#btn_start_game").on("click", function () {
 		$.getJSON("/api/start_game", function (data) {
@@ -104,10 +116,25 @@ $(function () {
 			$("#select_server").append(new Option(server.name, server.name));
 		}
 
+		$("#tournament_name_input").val(data.tournament_name);
+
 		$("#tournament_name").text(data.tournament_name);
 		$("#proxy_software").text(data.proxy_software);
 		$("#proxy_software_version").text(data.proxy_software_version);
 		$("#available_processors").text(data.available_processors);
+	});
+
+	$("#btn_rename_tournament").on("click", function() {
+		let newName = $("#tournament_name_input").val();
+		if(confirm("You are about to rename the tournament to " + newName + ". This will require a restart to apply all changes")) {
+			$.getJSON("/api/set_tournament_name?name=" + encodeURI(newName), function(data) {
+				if(data.success) {
+					showInfo("Tournament renamed. Please restart the servers to apply");
+				} else {
+					showError(data.message);
+				}
+			});
+		}
 	});
 
 	setInterval(function () {
@@ -121,6 +148,7 @@ function update() {
 	$.getJSON("/api/status", function (data) {
 		let uuidList = [];
 
+		$("#tournament_name").text(data.tournament_name);
 		$("#authorized_player_count").text(data.authorized_players);
 		$("#online_player_count").text(data.players.length);
 

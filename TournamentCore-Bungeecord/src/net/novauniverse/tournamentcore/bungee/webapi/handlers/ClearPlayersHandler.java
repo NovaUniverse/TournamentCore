@@ -17,7 +17,7 @@ public class ClearPlayersHandler implements HttpHandler {
 		JSONObject json = new JSONObject();
 
 		try {
-			String sql = "TRUNCATE players";
+			String sql = "DELETE FROM players";
 			PreparedStatement ps = TournamentCoreCommons.getDBConnection().getConnection().prepareStatement(sql);
 
 			ps.executeUpdate();

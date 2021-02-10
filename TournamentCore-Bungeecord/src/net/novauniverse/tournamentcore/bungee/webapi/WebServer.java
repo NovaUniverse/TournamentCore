@@ -7,12 +7,15 @@ import java.util.Map;
 
 import com.sun.net.httpserver.HttpServer;
 
+import net.novauniverse.tournamentcore.bungee.TournamentCore;
 import net.novauniverse.tournamentcore.bungee.webapi.handlers.BroadcastHandler;
 import net.novauniverse.tournamentcore.bungee.webapi.handlers.ClearPlayersHandler;
 import net.novauniverse.tournamentcore.bungee.webapi.handlers.ExportTeamDataHandler;
+import net.novauniverse.tournamentcore.bungee.webapi.handlers.FaviconHandler;
 import net.novauniverse.tournamentcore.bungee.webapi.handlers.ResetHandler;
 import net.novauniverse.tournamentcore.bungee.webapi.handlers.SendPlayerHandler;
 import net.novauniverse.tournamentcore.bungee.webapi.handlers.SendPlayersHandler;
+import net.novauniverse.tournamentcore.bungee.webapi.handlers.SetTournamentNameHandler;
 import net.novauniverse.tournamentcore.bungee.webapi.handlers.StartGameHandler;
 import net.novauniverse.tournamentcore.bungee.webapi.handlers.StaticFileHandler;
 import net.novauniverse.tournamentcore.bungee.webapi.handlers.StatusHandler;
@@ -26,27 +29,35 @@ public class WebServer {
 
 	public WebServer(int port, String appRoot) throws IOException {
 		httpServer = HttpServer.create(new InetSocketAddress(port), 0);
-
+		
+		// System related
 		httpServer.createContext("/api/status", new StatusHandler());
-
 		httpServer.createContext("/api/broadcast", new BroadcastHandler());
-
+		httpServer.createContext("/api/reset", new ResetHandler());
+		httpServer.createContext("/api/clear_players", new ClearPlayersHandler());
+		
+		// System options
+		httpServer.createContext("/api/set_tournament_name", new SetTournamentNameHandler());
+		
+		// Player related
 		httpServer.createContext("/api/send_player", new SendPlayerHandler());
 		httpServer.createContext("/api/send_players", new SendPlayersHandler());
 
-		httpServer.createContext("/api/reset", new ResetHandler());
-
-		httpServer.createContext("/api/clear_players", new ClearPlayersHandler());
-
+		// Game related
 		httpServer.createContext("/api/start_game", new StartGameHandler());
 
+		// Team related
 		httpServer.createContext("/api/export_team_data", new ExportTeamDataHandler());
-
 		httpServer.createContext("/api/uppload_team", new UpploadTeamHandler());
 
+		// File indexes
 		StaticFileHandler sfh = new StaticFileHandler("/app/", appRoot, "index.html");
 		httpServer.createContext("/app", sfh);
+		
+		// Icon
+		httpServer.createContext("/favicon.ico", new FaviconHandler(TournamentCore.getInstance().getDataFolder().getPath()));
 
+		// Start the server
 		httpServer.setExecutor(null);
 		httpServer.start();
 	}
