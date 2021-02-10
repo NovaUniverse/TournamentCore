@@ -23,6 +23,7 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
+import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.util.Vector;
@@ -207,6 +208,13 @@ public class TCLobby extends NovaModule implements Listener {
 		}
 
 		return false;
+	}
+	
+	@EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
+	public void onPlayerDropItem(PlayerDropItemEvent e) {
+		if(e.getItemDrop().getItemStack().getType() == Material.FISHING_ROD) {
+			e.setCancelled(true);
+		}
 	}
 
 	@EventHandler(priority = EventPriority.LOW)
