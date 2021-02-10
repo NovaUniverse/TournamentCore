@@ -33,8 +33,8 @@ import net.novauniverse.tournamentcore.spigot.modules.GoldenHead;
 import net.novauniverse.tournamentcore.spigot.modules.NoEnderPearlDamage;
 import net.novauniverse.tournamentcore.spigot.modules.PlayerHeadDrop;
 import net.novauniverse.tournamentcore.spigot.modules.PlayerKillCache;
-import net.novauniverse.tournamentcore.spigot.modules.PlayerListener;
 import net.novauniverse.tournamentcore.spigot.modules.PlayerNameCache;
+import net.novauniverse.tournamentcore.spigot.modules.TCPlayerListener;
 import net.novauniverse.tournamentcore.spigot.modules.TCScoreboard;
 import net.novauniverse.tournamentcore.spigot.modules.WinMessageListener;
 import net.novauniverse.tournamentcore.spigot.modules.YBorder;
@@ -147,7 +147,7 @@ public class TournamentCore extends JavaPlugin implements Listener {
 			Bukkit.getPluginManager().disablePlugin(this);
 			return;
 		}
-		
+
 		// Get tournament name
 		tournamentName = TournamentCoreCommons.getTournamentName();
 
@@ -173,7 +173,7 @@ public class TournamentCore extends JavaPlugin implements Listener {
 		ModuleManager.loadModule(ScoreManager.class, true);
 		ModuleManager.loadModule(GoldenHead.class, true);
 		ModuleManager.loadModule(TCScoreboard.class, true);
-		ModuleManager.loadModule(PlayerListener.class, true);
+		ModuleManager.loadModule(TCPlayerListener.class, true);
 
 		ModuleManager.loadModule(PlayerHeadDrop.class);
 		ModuleManager.loadModule(EdibleHeads.class);

@@ -13,6 +13,7 @@ import org.apache.commons.io.FileUtils;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.plugin.Listener;
 import net.novauniverse.tournamentcore.bungee.listeners.ChatLog;
+import net.novauniverse.tournamentcore.bungee.listeners.PlayerListener;
 import net.novauniverse.tournamentcore.bungee.listeners.TCPluginMessageListener;
 import net.novauniverse.tournamentcore.bungee.webapi.WebServer;
 import net.novauniverse.tournamentcore.commons.TournamentCoreCommons;
@@ -67,6 +68,7 @@ public class TournamentCore extends NovaPlugin implements Listener {
 		ProxyServer.getInstance().getPluginManager().registerListener(this, this);
 		ProxyServer.getInstance().getPluginManager().registerListener(this, new ChatLog());
 		ProxyServer.getInstance().getPluginManager().registerListener(this, new TCPluginMessageListener());
+		ProxyServer.getInstance().getPluginManager().registerListener(this, new PlayerListener());
 
 		File wwwAppFile = new File(getDataFolder().getPath() + File.separator + "www_app");
 
@@ -96,7 +98,7 @@ public class TournamentCore extends NovaPlugin implements Listener {
 				Enumeration<JarEntry> entries = jf.entries();
 				while (entries.hasMoreElements()) {
 					JarEntry je = entries.nextElement();
-					System.out.println(je.getName());
+					//System.out.println(je.getName());
 
 					if (je.getName().startsWith("TournamentCore-Team-Editor/")) {
 

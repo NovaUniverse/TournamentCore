@@ -35,11 +35,7 @@ $(function () {
 	});
 
 	$("#link_team_editor").on("click", function () {
-		$.getJSON("/api/export_team_data", function (data) {
-			setCookie("exported_team_data", JSON.stringify(data.teams_data), 1);
-			
-			window.open("/app/team_editor/");
-		});
+		window.open("/app/team_editor/");
 	});
 
 	$("#link_start_game").on("click", function () {
@@ -71,6 +67,18 @@ $(function () {
 
 		$('#reset_modal').modal('hide');
 	})
+
+	$("#link_clear_player_data").on("click", function () {
+		if (confirm("You are about to delete all player data! This will remove all players and their score from the database. After this players might need to reconnect")) {
+			$.getJSON("/api/clear_player_data", function (data) {
+				if (data.success) {
+					showInfo("Player data cleared");
+				} else {
+					showError(data.message);
+				}
+			});
+		}
+	});
 
 	$("#btn_start_game").on("click", function () {
 		$.getJSON("/api/start_game", function (data) {
@@ -112,6 +120,9 @@ $(function () {
 function update() {
 	$.getJSON("/api/status", function (data) {
 		let uuidList = [];
+
+		$("#authorized_player_count").text(data.authorized_players);
+		$("#online_player_count").text(data.players.length);
 
 		for (let i = 0; i < data.players.length; i++) {
 			let player = data.players[i];

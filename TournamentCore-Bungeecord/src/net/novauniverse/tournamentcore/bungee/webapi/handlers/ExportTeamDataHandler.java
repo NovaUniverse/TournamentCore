@@ -21,7 +21,7 @@ public class ExportTeamDataHandler implements HttpHandler {
 		JSONArray teamEntries = new JSONArray();
 
 		try {
-			String sql = "SELECT p.uuid AS uuid, p.username AS username, t.team_number AS team_number FROM players AS p LEFT JOIN teams AS t ON t.team_number = p.team_number";
+			String sql = "SELECT p.uuid AS uuid, p.username AS username, p.team_number AS team_number FROM players AS p LEFT JOIN teams AS t ON t.team_number = p.team_number";
 			PreparedStatement ps = TournamentCoreCommons.getDBConnection().getConnection().prepareStatement(sql);
 			ResultSet rs = ps.executeQuery();
 

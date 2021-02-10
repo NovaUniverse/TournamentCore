@@ -40,7 +40,7 @@
 				<ul class="navbar-nav">
 					<li class="nav-item dropdown">
 						<a class="nav-link dropdown-toggle" href="#" id="navbarGameDropdownMenuLink" role="button"
-							data-bs-toggle="dropdown" aria-expanded="false">
+							data-bs-toggle="dropdown" aria-expanded="false" title="Control the minigames">
 							Game
 						</a>
 						<ul class="dropdown-menu" aria-labelledby="navbarGameDropdownMenuLink">
@@ -50,24 +50,25 @@
 
 					<li class="nav-item dropdown">
 						<a class="nav-link dropdown-toggle" href="#" id="navbarSystemDropdownMenuLink" role="button"
-							data-bs-toggle="dropdown" aria-expanded="false">
+							data-bs-toggle="dropdown" aria-expanded="false" title="System related options">
 							System
 						</a>
 						<ul class="dropdown-menu" aria-labelledby="navbarSystemDropdownMenuLink">
 							<li>
-								<a class="dropdown-item" href="#" id="link_broadcast_message">Broadcast message</a>
+								<a class="dropdown-item" id="link_reset_data" href="#" title="Clear the team and player score and kills">Reset data</a>
 							</li>
 							<li>
-								<div class="dropdown-divider"></div>
-							</li>
-							<li>
-								<a class="dropdown-item" id="link_reset_data" href="#">Reset data</a>
+								<a class="dropdown-item" id="link_clear_player_data" href="#" title="Click to run TRUNCATE players; to reset all player data">Clear player data</a>
 							</li>
 						</ul>
 					</li>
 
 					<li class="nav-item">
-						<a class="nav-link" href="#" id="link_team_editor">Team Editor</a>
+						<a class="nav-link" href="#" id="link_broadcast_message" title="Send a message to all players on the server">Broadcast message</a>
+					</li>
+
+					<li class="nav-item">
+						<a class="nav-link" href="#" id="link_team_editor" title="Open the team editor">Team Editor</a>
 					</li>
 				</ul>
 			</div>
@@ -76,9 +77,16 @@
 
 	<div class="card mx-2 mt-2">
 		<div class="card-header">
-			Players
+			<span class="float-left">Players</span>
 		</div>
 		<div class="card-body">
+			<span class="badge bg-info text-dark" title="This is the amount of players in the database thats allowed to join the server">
+				Authorized Players: <span id="authorized_player_count">0</span>
+			</span>
+
+			<span class="badge bg-success" title="This is the amount of players online right now">
+				Online Players: <span id="online_player_count">0</span>
+			</span>
 			<table class="table table-striped table-bordered table-hover my-2">
 				<thead>
 					<tr>

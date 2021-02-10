@@ -94,6 +94,8 @@ public class StatusHandler implements HttpHandler {
 			players.put(p);
 		}
 
+		json.put("authorized_players", playerDataList.size());
+		
 		json.put("tournament_name", TournamentCore.getInstance().getTounamentName());
 		
 		json.put("online_players", ProxyServer.getInstance().getPlayers().size());

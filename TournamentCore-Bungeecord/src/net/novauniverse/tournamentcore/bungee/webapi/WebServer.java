@@ -8,6 +8,7 @@ import java.util.Map;
 import com.sun.net.httpserver.HttpServer;
 
 import net.novauniverse.tournamentcore.bungee.webapi.handlers.BroadcastHandler;
+import net.novauniverse.tournamentcore.bungee.webapi.handlers.ClearPlayersHandler;
 import net.novauniverse.tournamentcore.bungee.webapi.handlers.ExportTeamDataHandler;
 import net.novauniverse.tournamentcore.bungee.webapi.handlers.ResetHandler;
 import net.novauniverse.tournamentcore.bungee.webapi.handlers.SendPlayerHandler;
@@ -32,15 +33,17 @@ public class WebServer {
 
 		httpServer.createContext("/api/send_player", new SendPlayerHandler());
 		httpServer.createContext("/api/send_players", new SendPlayersHandler());
-		
+
 		httpServer.createContext("/api/reset", new ResetHandler());
-		
+
+		httpServer.createContext("/api/clear_players", new ClearPlayersHandler());
+
 		httpServer.createContext("/api/start_game", new StartGameHandler());
-		
+
 		httpServer.createContext("/api/export_team_data", new ExportTeamDataHandler());
-		
+
 		httpServer.createContext("/api/uppload_team", new UpploadTeamHandler());
-		
+
 		StaticFileHandler sfh = new StaticFileHandler("/app/", appRoot, "index.html");
 		httpServer.createContext("/app", sfh);
 
