@@ -4,13 +4,10 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
-import org.bukkit.scheduler.BukkitRunnable;
-
 import net.novauniverse.tournamentcore.spigot.TournamentCore;
 import net.novauniverse.tournamentcore.spigot.score.ScoreManager;
 import net.novauniverse.tournamentcore.team.TournamentCoreTeam;
 import net.novauniverse.tournamentcore.team.TournamentCoreTeamManager;
-import net.zeeraa.novacore.commons.log.Log;
 import net.zeeraa.novacore.commons.utils.TextUtils;
 import net.zeeraa.novacore.spigot.NovaCore;
 import net.zeeraa.novacore.spigot.language.LanguageManager;
