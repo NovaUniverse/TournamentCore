@@ -51,7 +51,7 @@ public class FlyCommand extends NovaCommand {
 			}
 		}
 
-		boolean newState = !target.isFlying();
+		boolean newState = !target.getAllowFlight();
 
 		target.setAllowFlight(newState);
 		target.setFlying(newState);

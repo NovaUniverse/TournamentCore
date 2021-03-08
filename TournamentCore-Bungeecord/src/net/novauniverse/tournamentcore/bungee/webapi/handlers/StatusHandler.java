@@ -16,6 +16,7 @@ import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.novauniverse.tournamentcore.bungee.TournamentCore;
 import net.novauniverse.tournamentcore.bungee.webapi.data.PlayerData;
+import net.novauniverse.tournamentcore.bungee.webapi.data.TeamData;
 import net.novauniverse.tournamentcore.commons.TournamentCoreCommons;
 
 import com.sun.net.httpserver.HttpExchange;
@@ -59,6 +60,23 @@ public class StatusHandler implements HttpHandler {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		
+		List<TeamData> teamDataList = new ArrayList<TeamData>();
+		try {
+			String sql = "SELECT * FROM teams";
+			PreparedStatement ps = TournamentCoreCommons.getDBConnection().getConnection().prepareStatement(sql);
+			ResultSet rs = ps.executeQuery();
+
+			while (rs.next()) {
+				TeamData td = new TeamData(rs.getInt("team_number"), rs.getInt("score"));
+				teamDataList.add(td);
+			}
+
+			rs.close();
+			ps.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
 		JSONArray players = new JSONArray();
 
@@ -93,6 +111,16 @@ public class StatusHandler implements HttpHandler {
 
 			players.put(p);
 		}
+		
+		JSONArray teams = new JSONArray();
+		for (TeamData td : teamDataList) {
+			JSONObject team = new JSONObject();
+			
+			team.put("team_number", td.getTeamNumber());
+			team.put("score", td.getScore());
+			
+			teams.put(team);
+		}
 
 		json.put("authorized_players", playerDataList.size());
 		
@@ -105,6 +133,7 @@ public class StatusHandler implements HttpHandler {
 		json.put("free_memory", Runtime.getRuntime().freeMemory());
 		
 		json.put("servers", servers);
+		json.put("teams", teams);
 		json.put("players", players);
 
 		String response = json.toString(4);

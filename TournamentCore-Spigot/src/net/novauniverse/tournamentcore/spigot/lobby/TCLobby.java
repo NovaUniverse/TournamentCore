@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.UUID;
 
+import org.bukkit.Achievement;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
@@ -37,7 +38,6 @@ import net.zeeraa.novacore.commons.log.Log;
 import net.zeeraa.novacore.commons.tasks.Task;
 import net.zeeraa.novacore.commons.utils.RandomGenerator;
 import net.zeeraa.novacore.spigot.NovaCore;
-import net.zeeraa.novacore.spigot.abstraction.events.VersionIndependantPlayerAchievementAwardedEvent;
 import net.zeeraa.novacore.spigot.command.CommandRegistry;
 import net.zeeraa.novacore.spigot.module.NovaModule;
 import net.zeeraa.novacore.spigot.module.modules.multiverse.MultiverseManager;
@@ -62,13 +62,13 @@ public class TCLobby extends NovaModule implements Listener {
 	private MultiverseWorld multiverseWorld;
 
 	private HashMap<UUID, Integer> theCalmDownCageCounter;
-	
+
 	private boolean gameRunningMessageSent;
 	private SimpleTask gameRunningCheckTask;
 
 	private SimpleTask loadScoreTask;
 	private SimpleTask lobbyTask;
-	
+
 	public static TCLobby getInstance() {
 		return instance;
 	}
@@ -131,8 +131,7 @@ public class TCLobby extends NovaModule implements Listener {
 			}
 		}, 200L);
 		loadScoreTask.start();
-		
-		
+
 		theCalmDownCageCounter = new HashMap<UUID, Integer>();
 
 		calmDownCageResetTimer = new SimpleTask(new Runnable() {
@@ -141,20 +140,20 @@ public class TCLobby extends NovaModule implements Listener {
 				theCalmDownCageCounter.clear();
 			}
 		}, 900L, 900L);
-		//calmDownCageResetTimer.start();
-		
+		// calmDownCageResetTimer.start();
+
 		gameRunningCheckTask = new SimpleTask(TournamentCore.getInstance(), new Runnable() {
 			@Override
 			public void run() {
 				String activeServer = TournamentCoreDB.getActiveServer();
-				if(activeServer == null) {
-					if(gameRunningMessageSent) {
+				if (activeServer == null) {
+					if (gameRunningMessageSent) {
 						gameRunningMessageSent = false;
 					}
 				} else {
-					if(!gameRunningMessageSent) {
+					if (!gameRunningMessageSent) {
 						gameRunningMessageSent = true;
-						for(Player player : Bukkit.getServer().getOnlinePlayers()) {
+						for (Player player : Bukkit.getServer().getOnlinePlayers()) {
 							JSONMessage.create("A game is in progress!").color(ChatColor.GOLD).style(ChatColor.BOLD).send(player);
 							JSONMessage.create("Use /reconnect or click ").color(ChatColor.GOLD).style(ChatColor.BOLD).then("[Here]").color(ChatColor.GREEN).tooltip("Click to reconnect").runCommand("/reconnect").style(ChatColor.BOLD).then(" to reconnect").color(ChatColor.GOLD).style(ChatColor.BOLD).send(player);
 						}
@@ -163,7 +162,7 @@ public class TCLobby extends NovaModule implements Listener {
 			}
 		}, 20L);
 		gameRunningCheckTask.start();
-		
+
 		CommandRegistry.registerCommand(new ReconnectCommand());
 	}
 
@@ -173,7 +172,7 @@ public class TCLobby extends NovaModule implements Listener {
 		Task.tryStopTask(calmDownCageResetTimer);
 		Task.tryStopTask(loadScoreTask);
 		Task.tryStopTask(lobbyTask);
-		
+
 		MultiverseManager.getInstance().unload(multiverseWorld);
 		multiverseWorld = null;
 	}
@@ -209,10 +208,10 @@ public class TCLobby extends NovaModule implements Listener {
 
 		return false;
 	}
-	
+
 	@EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
 	public void onPlayerDropItem(PlayerDropItemEvent e) {
-		if(e.getItemDrop().getItemStack().getType() == Material.FISHING_ROD) {
+		if (e.getItemDrop().getItemStack().getType() == Material.FISHING_ROD) {
 			e.setCancelled(true);
 		}
 	}
@@ -220,6 +219,11 @@ public class TCLobby extends NovaModule implements Listener {
 	@EventHandler(priority = EventPriority.LOW)
 	public void onPlayerJoin(PlayerJoinEvent e) {
 		Player p = e.getPlayer();
+		
+		// Prevent the press e to open inventory message from showing all the time
+		if(!p.hasAchievement(Achievement.OPEN_INVENTORY)) {
+			p.awardAchievement(Achievement.OPEN_INVENTORY);
+		}
 
 		PlayerUtils.clearPlayerInventory(p);
 		PlayerUtils.clearPotionEffects(p);
@@ -242,10 +246,12 @@ public class TCLobby extends NovaModule implements Listener {
 		}
 	}
 
-	@EventHandler(priority = EventPriority.NORMAL)
-	public void onVersionIndependantPlayerAchievementAwarded(VersionIndependantPlayerAchievementAwardedEvent e) {
-		e.setCancelled(true);
-	}
+	// Removed since it makes the press e to open your inventory show
+	/*
+	 * @EventHandler(priority = EventPriority.NORMAL) public void
+	 * onVersionIndependantPlayerAchievementAwarded(
+	 * VersionIndependantPlayerAchievementAwardedEvent e) { e.setCancelled(true); }
+	 */
 
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onEntityDamage(EntityDamageEvent e) {
@@ -296,10 +302,10 @@ public class TCLobby extends NovaModule implements Listener {
 
 							if (!p.getInventory().contains(Material.FISHING_ROD)) {
 								if (!theCalmDownCageCounter.containsKey(p.getUniqueId())) {
-									//theCalmDownCageCounter.put(p.getUniqueId(), 1);
+									// theCalmDownCageCounter.put(p.getUniqueId(), 1);
 								} else {
 									int newVal = theCalmDownCageCounter.get(p.getUniqueId()) + 1;
-									//theCalmDownCageCounter.put(p.getUniqueId(), newVal);
+									// theCalmDownCageCounter.put(p.getUniqueId(), newVal);
 
 									if (newVal > 5) {
 										p.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + (RandomGenerator.generate(0, 5) == 4 ? "You have committed crimes against skyrim and her people. what say you in your defense" : "Stop you have violated the law pay the court a fine or serve your sentance"));

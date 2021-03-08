@@ -10,6 +10,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
@@ -26,6 +28,7 @@ import net.novauniverse.tournamentcore.spigot.lobby.TCLobby;
 import net.novauniverse.tournamentcore.spigot.lobby.duels.DuelsManager;
 import net.novauniverse.tournamentcore.spigot.lobby.duels.command.AcceptDuelCommand;
 import net.novauniverse.tournamentcore.spigot.lobby.duels.command.DuelCommand;
+import net.novauniverse.tournamentcore.spigot.messages.TCActionBarCombatTagMessage;
 import net.novauniverse.tournamentcore.spigot.messages.TCTeamEliminationMessage;
 import net.novauniverse.tournamentcore.spigot.modules.EdibleHeads;
 import net.novauniverse.tournamentcore.spigot.modules.GameListeners;
@@ -38,6 +41,7 @@ import net.novauniverse.tournamentcore.spigot.modules.TCPlayerListener;
 import net.novauniverse.tournamentcore.spigot.modules.TCScoreboard;
 import net.novauniverse.tournamentcore.spigot.modules.WinMessageListener;
 import net.novauniverse.tournamentcore.spigot.modules.YBorder;
+import net.novauniverse.tournamentcore.spigot.modules.gamespecific.TCDeathSwapManager;
 import net.novauniverse.tournamentcore.spigot.pluginmessagelistener.TCPluginMessageListnener;
 import net.novauniverse.tournamentcore.spigot.score.ScoreListener;
 import net.novauniverse.tournamentcore.spigot.score.ScoreManager;
@@ -52,6 +56,7 @@ import net.zeeraa.novacore.spigot.language.LanguageReader;
 import net.zeeraa.novacore.spigot.module.ModuleManager;
 import net.zeeraa.novacore.spigot.module.modules.compass.CompassTracker;
 import net.zeeraa.novacore.spigot.module.modules.game.GameManager;
+import net.zeeraa.novacore.spigot.module.modules.game.events.GameLoadedEvent;
 import net.zeeraa.novacore.spigot.module.modules.gamelobby.GameLobby;
 import net.zeeraa.novacore.spigot.module.modules.gui.GUIManager;
 import net.zeeraa.novacore.spigot.module.modules.scoreboard.NetherBoardScoreboard;
@@ -163,7 +168,7 @@ public class TournamentCore extends JavaPlugin implements Listener {
 		NetherBoardScoreboard.getInstance().setDefaultTitle(ChatColor.translateAlternateColorCodes('§', tournamentName));
 		NetherBoardScoreboard.getInstance().setLineCount(15);
 
-		// Register modules
+		// Register modules and enable them
 		ModuleManager.loadModule(PlayerNameCache.class, true);
 		ModuleManager.loadModule(PlayerKillCache.class, true);
 		ModuleManager.loadModule(NoEnderPearlDamage.class, true);
@@ -175,6 +180,8 @@ public class TournamentCore extends JavaPlugin implements Listener {
 		ModuleManager.loadModule(TCScoreboard.class, true);
 		ModuleManager.loadModule(TCPlayerListener.class, true);
 
+		// Register modules
+		ModuleManager.loadModule(TCDeathSwapManager.class);
 		ModuleManager.loadModule(PlayerHeadDrop.class);
 		ModuleManager.loadModule(EdibleHeads.class);
 		ModuleManager.loadModule(YBorder.class);
@@ -219,12 +226,13 @@ public class TournamentCore extends JavaPlugin implements Listener {
 
 			ModuleManager.require(GUIManager.class);
 
-			// CitizensAPI.getTraitFactory().registerTrait(TraitInfo.create(MerchantTrait.class).withName("MerchantTrait"));
-
 			ModuleManager.loadModule(DuelsManager.class, true);
 			CommandRegistry.registerCommand(new AcceptDuelCommand());
 			CommandRegistry.registerCommand(new DuelCommand());
 		}
+		
+		// Combat tag message
+		GameManager.getInstance().addCombatTagMessage(new TCActionBarCombatTagMessage());
 
 		// Check if game is enabled
 		if (getConfig().getBoolean("game_enabled")) {
@@ -288,5 +296,14 @@ public class TournamentCore extends JavaPlugin implements Listener {
 
 	public String getLobbyServer() {
 		return lobbyServer;
+	}
+	
+	// Events
+	@EventHandler(priority = EventPriority.NORMAL)
+	public void onGameLoaded(GameLoadedEvent e) {
+		if (e.getGame().getName().equalsIgnoreCase("deathswap")) {
+			Log.info("TournamentCore", "Enabling deathswap module");
+			ModuleManager.enable(TCDeathSwapManager.class);
+		}
 	}
 }

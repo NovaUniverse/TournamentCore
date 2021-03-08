@@ -13,7 +13,7 @@
 		"tournamentcore.command.reconnect.connecting": "§aConnecting to the server...",
 		"tournamentcore.command.reconnect.no_game": "§cThere is no active game right now",
 		
-		"tournamentcore.game.elimination.team.eliminated": "§c§lTeam Eliminated> %s§l%s §6§l%s",
+		"tournamentcore.game.elimination.team.eliminated": "§c§lTeam Eliminated> %s§l%s §6§l%s place",
 		"tournamentcore.game.sending_you_to_lobby_10_seconds": "§bSending you to the lobby in 10 seconds",
 		"tournamentcore.game.server.restarting": "§b%s server restarting, Please reconnect",
 		
@@ -33,6 +33,8 @@
 		"tournamentcore.yborder.above_limit.info": "§c§l%s blocks above the height limit",
 		
 		
-		"tournamentcore.nether_disabled": "§cNether is disabled"
+		"tournamentcore.nether_disabled": "§cNether is disabled",
+		
+		"tournamentcore.game.tracker.tracking_player": "§aTracking player §b%s"
 	}
 }

@@ -7,6 +7,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerLoginEvent.Result;
 import net.novauniverse.tournamentcore.commons.TournamentCoreCommons;
@@ -17,7 +18,7 @@ public class TCPlayerListener extends NovaModule implements Listener {
 	public String getName() {
 		return "TCPlayerListener";
 	}
-	
+
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void playerLoginEvent(PlayerLoginEvent e) {
 		try {
@@ -27,7 +28,7 @@ public class TCPlayerListener extends NovaModule implements Listener {
 			ps.setString(1, e.getPlayer().getUniqueId().toString());
 
 			ResultSet rs = ps.executeQuery();
-			
+
 			if (!rs.next()) {
 				if (!e.getPlayer().hasPermission("tournamentcore.bypasswhitelist")) {
 					e.setResult(Result.KICK_OTHER);
@@ -39,6 +40,11 @@ public class TCPlayerListener extends NovaModule implements Listener {
 			ps.close();
 		} catch (Exception ex) {
 			ex.printStackTrace();
-		}	
+		}
+	}
+
+	@EventHandler(priority = EventPriority.NORMAL)
+	public void onPlayerJoin(PlayerJoinEvent e) {
+		//LabyModIntegration.sendWatermark(e.getPlayer(), true);
 	}
 }
