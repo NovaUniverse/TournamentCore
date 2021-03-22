@@ -47,7 +47,6 @@ public class StaticFileHandler implements HttpHandler {
      *                       Only files under this directory will be served to the client.
      *                       For instance "./staticfiles".
      * @param directoryIndex File to show when a directory is requested, e.g. "index.html".
-     * @return something
      */
     public StaticFileHandler(String urlPrefix, String filesystemRoot, String directoryIndex) {
         if (!urlPrefix.startsWith("/")) {
