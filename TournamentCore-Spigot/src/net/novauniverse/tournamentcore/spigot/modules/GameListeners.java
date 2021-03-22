@@ -9,7 +9,6 @@ import org.bukkit.event.Listener;
 
 import net.novauniverse.tournamentcore.spigot.TournamentCore;
 import net.novauniverse.tournamentcore.spigot.database.TournamentCoreDB;
-import net.novauniverse.tournamentcore.spigot.gamespecific.BingoManger;
 import net.novauniverse.tournamentcore.spigot.gamespecific.UHCManager;
 import net.zeeraa.novacore.commons.log.Log;
 import net.zeeraa.novacore.spigot.language.LanguageManager;
@@ -26,14 +25,14 @@ public class GameListeners extends NovaModule implements Listener {
 	public String getName() {
 		return "TCGameListeners";
 	}
-	
+
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onGameLoaded(GameLoadedEvent e) {
 		NetherBoardScoreboard.getInstance().setGlobalLine(0, ChatColor.YELLOW + "" + ChatColor.BOLD + e.getGame().getDisplayName());
 
 		if (e.getGame().getName().equalsIgnoreCase("bingo")) {
 			Log.info("TournamentCore", "Bingo manager enabled");
-			ModuleManager.enable(BingoManger.class);
+			/* oduleManager.enable(BingoManger.class); */
 			TournamentCore.getInstance().setTopEnabled(true);
 			Log.info("TournamentCore", "/top command enabled");
 		}
