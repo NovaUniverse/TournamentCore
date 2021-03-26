@@ -10,12 +10,11 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import net.novauniverse.tournamentcore.commons.TournamentCoreCommons;
 import net.novauniverse.tournamentcore.spigot.command.database.DatabaseCommand;
@@ -23,14 +22,13 @@ import net.novauniverse.tournamentcore.spigot.command.fly.FlyCommand;
 import net.novauniverse.tournamentcore.spigot.command.halt.HaltCommand;
 import net.novauniverse.tournamentcore.spigot.command.invsee.InvseeCommand;
 import net.novauniverse.tournamentcore.spigot.command.top.TopCommand;
+import net.novauniverse.tournamentcore.spigot.gamesetup.GameSetupProcess;
 import net.novauniverse.tournamentcore.spigot.leaderboard.TCLeaderboard;
 import net.novauniverse.tournamentcore.spigot.listeners.GameEventListeners;
 import net.novauniverse.tournamentcore.spigot.lobby.TCLobby;
 import net.novauniverse.tournamentcore.spigot.lobby.duels.DuelsManager;
 import net.novauniverse.tournamentcore.spigot.lobby.duels.command.AcceptDuelCommand;
 import net.novauniverse.tournamentcore.spigot.lobby.duels.command.DuelCommand;
-import net.novauniverse.tournamentcore.spigot.messages.TCActionBarCombatTagMessage;
-import net.novauniverse.tournamentcore.spigot.messages.TCTeamEliminationMessage;
 import net.novauniverse.tournamentcore.spigot.modules.EdibleHeads;
 import net.novauniverse.tournamentcore.spigot.modules.GameListeners;
 import net.novauniverse.tournamentcore.spigot.modules.GoldenHead;
@@ -58,9 +56,6 @@ import net.zeeraa.novacore.spigot.command.CommandRegistry;
 import net.zeeraa.novacore.spigot.language.LanguageReader;
 import net.zeeraa.novacore.spigot.module.ModuleManager;
 import net.zeeraa.novacore.spigot.module.modules.compass.CompassTracker;
-import net.zeeraa.novacore.spigot.module.modules.game.GameManager;
-import net.zeeraa.novacore.spigot.module.modules.game.events.GameLoadedEvent;
-import net.zeeraa.novacore.spigot.module.modules.gamelobby.GameLobby;
 import net.zeeraa.novacore.spigot.module.modules.gui.GUIManager;
 import net.zeeraa.novacore.spigot.module.modules.scoreboard.NetherBoardScoreboard;
 
@@ -104,7 +99,7 @@ public class TournamentCore extends JavaPlugin implements Listener {
 
 			if (NovaCore.isNovaGameEngineEnabled()) {
 				Log.info("TournamentCore", "Reading lobby files from " + gameLobbyFolder.getPath());
-				GameLobby.getInstance().getMapReader().loadAll(gameLobbyFolder, worldFolder);
+				GameSetupProcess.readMapFiles(gameLobbyFolder, worldFolder);
 			}
 		} catch (IOException e1) {
 			e1.printStackTrace();
@@ -167,7 +162,7 @@ public class TournamentCore extends JavaPlugin implements Listener {
 		NovaCore.getInstance().setTeamManager(teamManager);
 
 		if (NovaCore.isNovaGameEngineEnabled()) {
-			GameManager.getInstance().setUseTeams(true);
+			GameSetupProcess.init();
 		}
 
 		// Scoreboard
@@ -249,24 +244,28 @@ public class TournamentCore extends JavaPlugin implements Listener {
 
 		if (NovaCore.isNovaGameEngineEnabled()) {
 			// Combat tag message
-			GameManager.getInstance().addCombatTagMessage(new TCActionBarCombatTagMessage());
+			
 
 			// Check if game is enabled
 			if (getConfig().getBoolean("game_enabled")) {
 				scoreListener = new ScoreListener(getConfig().getBoolean("kill_score_enabled"), getConfig().getInt("kill_score"), getConfig().getBoolean("win_score_enabled"), winScore, getConfig().getBoolean("participation_score_enabled"), getConfig().getInt("participation_score"));
 				Bukkit.getServer().getPluginManager().registerEvents(scoreListener, this);
 
-				GameManager.getInstance().setTeamEliminationMessage(new TCTeamEliminationMessage());
-
 				CompassTracker.getInstance().setCompassTrackerTarget(new TCCompassTracker());
 				CompassTracker.getInstance().setStrictMode(true);
-
-				Log.info("TournamentCore", "Game lobby map: " + GameLobby.getInstance().getActiveMap());
 			}
 		}
 
 		this.getServer().getMessenger().registerOutgoingPluginChannel(this, "TCData");
 		this.getServer().getMessenger().registerIncomingPluginChannel(this, "TCData", new TCPluginMessageListnener());
+		
+		new BukkitRunnable() {
+			
+			@Override
+			public void run() {
+				Log.info("TournamentCore", "NovaCore#isNovaGameEngineEnabled(): " + NovaCore.isNovaGameEngineEnabled());
+			}
+		}.runTask(this);
 	}
 
 	@Override
@@ -314,19 +313,5 @@ public class TournamentCore extends JavaPlugin implements Listener {
 
 	public String getLobbyServer() {
 		return lobbyServer;
-	}
-
-	// Events
-	@EventHandler(priority = EventPriority.NORMAL)
-	public void onGameLoaded(GameLoadedEvent e) {
-		if (e.getGame().getName().equalsIgnoreCase("deathswap")) {
-			Log.info("TournamentCore", "Enabling deathswap module");
-			ModuleManager.enable(DeathSwapManager.class);
-		}
-
-		if (e.getGame().getName().equalsIgnoreCase("spleef")) {
-			Log.info("TournamentCore", "Enabling spleef module");
-			ModuleManager.enable(SpleefManager.class);
-		}
 	}
 }

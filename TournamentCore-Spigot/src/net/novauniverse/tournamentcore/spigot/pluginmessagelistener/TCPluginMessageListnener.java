@@ -7,6 +7,7 @@ import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteStreams;
 
 import net.zeeraa.novacore.commons.log.Log;
+import net.zeeraa.novacore.spigot.NovaCore;
 import net.zeeraa.novacore.spigot.module.modules.game.GameManager;
 
 public class TCPluginMessageListnener implements PluginMessageListener {
@@ -18,11 +19,13 @@ public class TCPluginMessageListnener implements PluginMessageListener {
 
 			switch (subchannel.toLowerCase()) {
 			case "start_game":
-				if (GameManager.getInstance().isEnabled()) {
-					if (GameManager.getInstance().hasGame()) {
-						if (!GameManager.getInstance().getCountdown().hasCountdownStarted() && !GameManager.getInstance().getCountdown().hasCountdownFinished()) {
-							Log.info("TCPluginMessageListnener", "Starting countdown");
-							GameManager.getInstance().getCountdown().startCountdown();
+				if (NovaCore.isNovaGameEngineEnabled()) {
+					if (GameManager.getInstance().isEnabled()) {
+						if (GameManager.getInstance().hasGame()) {
+							if (!GameManager.getInstance().getCountdown().hasCountdownStarted() && !GameManager.getInstance().getCountdown().hasCountdownFinished()) {
+								Log.info("TCPluginMessageListnener", "Starting countdown");
+								GameManager.getInstance().getCountdown().startCountdown();
+							}
 						}
 					}
 				}
