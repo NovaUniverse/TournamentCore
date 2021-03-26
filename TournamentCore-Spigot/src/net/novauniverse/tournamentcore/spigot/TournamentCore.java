@@ -24,6 +24,7 @@ import net.novauniverse.tournamentcore.spigot.command.halt.HaltCommand;
 import net.novauniverse.tournamentcore.spigot.command.invsee.InvseeCommand;
 import net.novauniverse.tournamentcore.spigot.command.top.TopCommand;
 import net.novauniverse.tournamentcore.spigot.leaderboard.TCLeaderboard;
+import net.novauniverse.tournamentcore.spigot.listeners.GameEventListeners;
 import net.novauniverse.tournamentcore.spigot.lobby.TCLobby;
 import net.novauniverse.tournamentcore.spigot.lobby.duels.DuelsManager;
 import net.novauniverse.tournamentcore.spigot.lobby.duels.command.AcceptDuelCommand;
@@ -101,8 +102,10 @@ public class TournamentCore extends JavaPlugin implements Listener {
 
 			FileUtils.touch(sqlFixFile);
 
-			Log.info("TournamentCore", "Reading lobby files from " + gameLobbyFolder.getPath());
-			GameLobby.getInstance().getMapReader().loadAll(gameLobbyFolder, worldFolder);
+			if (NovaCore.isNovaGameEngineEnabled()) {
+				Log.info("TournamentCore", "Reading lobby files from " + gameLobbyFolder.getPath());
+				GameLobby.getInstance().getMapReader().loadAll(gameLobbyFolder, worldFolder);
+			}
 		} catch (IOException e1) {
 			e1.printStackTrace();
 			Log.fatal("TournamentCore", "Failed to setup data directory");
@@ -162,7 +165,10 @@ public class TournamentCore extends JavaPlugin implements Listener {
 		teamManager = new TournamentCoreTeamManager();
 
 		NovaCore.getInstance().setTeamManager(teamManager);
-		GameManager.getInstance().setUseTeams(true);
+
+		if (NovaCore.isNovaGameEngineEnabled()) {
+			GameManager.getInstance().setUseTeams(true);
+		}
 
 		// Scoreboard
 		ModuleManager.require(NetherBoardScoreboard.class);
@@ -174,8 +180,7 @@ public class TournamentCore extends JavaPlugin implements Listener {
 		ModuleManager.loadModule(PlayerNameCache.class, true);
 		ModuleManager.loadModule(PlayerKillCache.class, true);
 		ModuleManager.loadModule(NoEnderPearlDamage.class, true);
-		ModuleManager.loadModule(WinMessageListener.class, true);
-		ModuleManager.loadModule(GameListeners.class, true);
+		
 		ModuleManager.loadModule(TCLeaderboard.class, true);
 		ModuleManager.loadModule(ScoreManager.class, true);
 		ModuleManager.loadModule(GoldenHead.class, true);
@@ -183,9 +188,6 @@ public class TournamentCore extends JavaPlugin implements Listener {
 		ModuleManager.loadModule(TCPlayerListener.class, true);
 
 		// Register modules
-		ModuleManager.loadModule(DeathSwapManager.class);
-		ModuleManager.loadModule(SpleefManager.class);
-		ModuleManager.loadModule(UHCManager.class);
 		ModuleManager.loadModule(PlayerHeadDrop.class);
 		ModuleManager.loadModule(EdibleHeads.class);
 		ModuleManager.loadModule(YBorder.class);
@@ -197,6 +199,16 @@ public class TournamentCore extends JavaPlugin implements Listener {
 		CommandRegistry.registerCommand(new HaltCommand());
 		CommandRegistry.registerCommand(new InvseeCommand());
 		CommandRegistry.registerCommand(new TopCommand());
+		
+		if (NovaCore.isNovaGameEngineEnabled()) {
+			Bukkit.getServer().getPluginManager().registerEvents(new GameEventListeners(), this);
+			
+			ModuleManager.loadModule(UHCManager.class);
+			ModuleManager.loadModule(DeathSwapManager.class);
+			ModuleManager.loadModule(SpleefManager.class);
+			ModuleManager.loadModule(WinMessageListener.class, true);
+			ModuleManager.loadModule(GameListeners.class, true);
+		}
 
 		// Configuration values for heads
 		if (getConfig().getBoolean("enable_head_drops")) {
@@ -234,21 +246,23 @@ public class TournamentCore extends JavaPlugin implements Listener {
 			CommandRegistry.registerCommand(new AcceptDuelCommand());
 			CommandRegistry.registerCommand(new DuelCommand());
 		}
-		
-		// Combat tag message
-		GameManager.getInstance().addCombatTagMessage(new TCActionBarCombatTagMessage());
 
-		// Check if game is enabled
-		if (getConfig().getBoolean("game_enabled")) {
-			scoreListener = new ScoreListener(getConfig().getBoolean("kill_score_enabled"), getConfig().getInt("kill_score"), getConfig().getBoolean("win_score_enabled"), winScore, getConfig().getBoolean("participation_score_enabled"), getConfig().getInt("participation_score"));
-			Bukkit.getServer().getPluginManager().registerEvents(scoreListener, this);
+		if (NovaCore.isNovaGameEngineEnabled()) {
+			// Combat tag message
+			GameManager.getInstance().addCombatTagMessage(new TCActionBarCombatTagMessage());
 
-			GameManager.getInstance().setTeamEliminationMessage(new TCTeamEliminationMessage());
+			// Check if game is enabled
+			if (getConfig().getBoolean("game_enabled")) {
+				scoreListener = new ScoreListener(getConfig().getBoolean("kill_score_enabled"), getConfig().getInt("kill_score"), getConfig().getBoolean("win_score_enabled"), winScore, getConfig().getBoolean("participation_score_enabled"), getConfig().getInt("participation_score"));
+				Bukkit.getServer().getPluginManager().registerEvents(scoreListener, this);
 
-			CompassTracker.getInstance().setCompassTrackerTarget(new TCCompassTracker());
-			CompassTracker.getInstance().setStrictMode(true);
+				GameManager.getInstance().setTeamEliminationMessage(new TCTeamEliminationMessage());
 
-			Log.info("TournamentCore", "Game lobby map: " + GameLobby.getInstance().getActiveMap());
+				CompassTracker.getInstance().setCompassTrackerTarget(new TCCompassTracker());
+				CompassTracker.getInstance().setStrictMode(true);
+
+				Log.info("TournamentCore", "Game lobby map: " + GameLobby.getInstance().getActiveMap());
+			}
 		}
 
 		this.getServer().getMessenger().registerOutgoingPluginChannel(this, "TCData");
@@ -301,7 +315,7 @@ public class TournamentCore extends JavaPlugin implements Listener {
 	public String getLobbyServer() {
 		return lobbyServer;
 	}
-	
+
 	// Events
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onGameLoaded(GameLoadedEvent e) {
@@ -309,7 +323,7 @@ public class TournamentCore extends JavaPlugin implements Listener {
 			Log.info("TournamentCore", "Enabling deathswap module");
 			ModuleManager.enable(DeathSwapManager.class);
 		}
-		
+
 		if (e.getGame().getName().equalsIgnoreCase("spleef")) {
 			Log.info("TournamentCore", "Enabling spleef module");
 			ModuleManager.enable(SpleefManager.class);

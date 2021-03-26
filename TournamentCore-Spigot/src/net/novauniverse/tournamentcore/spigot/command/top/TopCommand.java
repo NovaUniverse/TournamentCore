@@ -14,6 +14,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.permissions.PermissionDefault;
 
 import net.novauniverse.tournamentcore.spigot.TournamentCore;
+import net.zeeraa.novacore.spigot.NovaCore;
 import net.zeeraa.novacore.spigot.command.AllowedSenders;
 import net.zeeraa.novacore.spigot.command.NovaCommand;
 import net.zeeraa.novacore.spigot.language.LanguageManager;
@@ -80,18 +81,20 @@ public class TopCommand extends NovaCommand {
 			return false;
 		}
 
-		if (!ModuleManager.isEnabled(GameManager.class)) {
-			p.sendMessage(LanguageManager.getString(p, "tournamentcore.command.top.disabled.world"));
-			return false;
-		} else {
-			if (GameManager.getInstance().hasGame()) {
-				if (!GameManager.getInstance().getActiveGame().getWorld().getUID().toString().equalsIgnoreCase(p.getWorld().getUID().toString())) {
+		if (NovaCore.isNovaGameEngineEnabled()) {
+			if (!ModuleManager.isEnabled(GameManager.class)) {
+				p.sendMessage(LanguageManager.getString(p, "tournamentcore.command.top.disabled.world"));
+				return false;
+			} else {
+				if (GameManager.getInstance().hasGame()) {
+					if (!GameManager.getInstance().getActiveGame().getWorld().getUID().toString().equalsIgnoreCase(p.getWorld().getUID().toString())) {
+						p.sendMessage(LanguageManager.getString(p, "tournamentcore.command.top.disabled.world"));
+						return false;
+					}
+				} else {
 					p.sendMessage(LanguageManager.getString(p, "tournamentcore.command.top.disabled.world"));
 					return false;
 				}
-			} else {
-				p.sendMessage(LanguageManager.getString(p, "tournamentcore.command.top.disabled.world"));
-				return false;
 			}
 		}
 

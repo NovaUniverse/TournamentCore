@@ -66,17 +66,19 @@ public class TCScoreboard extends NovaModule implements Listener {
 						}
 					}
 
-					if (GameManager.getInstance().getCountdown().isCountdownRunning()) {
-						gameCountdownShown = true;
+					if (NovaCore.isNovaGameEngineEnabled()) {
+						if (GameManager.getInstance().getCountdown().isCountdownRunning()) {
+							gameCountdownShown = true;
 
-						for (Player player : Bukkit.getServer().getOnlinePlayers()) {
-							NetherBoardScoreboard.getInstance().setPlayerLine(COUNTDOWN_LINE, player, ChatColor.GOLD + LanguageManager.getString(player, "tournamentcore.scoreboard.starting_in") + ChatColor.AQUA + TextUtils.secondsToHoursMinutes(GameManager.getInstance().getCountdown().getTimeLeft()));
-						}
-					} else {
-						if (gameCountdownShown) {
-							gameCountdownShown = false;
 							for (Player player : Bukkit.getServer().getOnlinePlayers()) {
-								NetherBoardScoreboard.getInstance().clearPlayerLine(COUNTDOWN_LINE, player);
+								NetherBoardScoreboard.getInstance().setPlayerLine(COUNTDOWN_LINE, player, ChatColor.GOLD + LanguageManager.getString(player, "tournamentcore.scoreboard.starting_in") + ChatColor.AQUA + TextUtils.secondsToHoursMinutes(GameManager.getInstance().getCountdown().getTimeLeft()));
+							}
+						} else {
+							if (gameCountdownShown) {
+								gameCountdownShown = false;
+								for (Player player : Bukkit.getServer().getOnlinePlayers()) {
+									NetherBoardScoreboard.getInstance().clearPlayerLine(COUNTDOWN_LINE, player);
+								}
 							}
 						}
 					}
