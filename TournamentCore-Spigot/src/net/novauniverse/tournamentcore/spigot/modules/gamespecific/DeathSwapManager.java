@@ -11,7 +11,7 @@ import net.zeeraa.novacore.spigot.module.NovaModule;
 import net.zeeraa.novacore.spigot.module.modules.scoreboard.NetherBoardScoreboard;
 import net.zeeraa.novacore.spigot.tasks.SimpleTask;
 
-public class TCDeathSwapManager extends NovaModule {
+public class DeathSwapManager extends NovaModule {
 	public static final int GENERATION_LINE = 6;
 	private boolean worldGenerationShown;
 	private Task task;
@@ -33,15 +33,15 @@ public class TCDeathSwapManager extends NovaModule {
 					if (!deathSwap.getWorldPreGenerator().isFinished()) {
 						worldGenerationShown = true;
 
-						NetherBoardScoreboard.getInstance().setGlobalLine(TCDeathSwapManager.GENERATION_LINE, ChatColor.GOLD + "Generating world: " + ChatColor.AQUA + "" + ((int) (deathSwap.getWorldPreGenerator().getProgressValue() * 100)) + "%");
+						NetherBoardScoreboard.getInstance().setGlobalLine(DeathSwapManager.GENERATION_LINE, ChatColor.GOLD + "Generating world: " + ChatColor.AQUA + "" + ((int) (deathSwap.getWorldPreGenerator().getProgressValue() * 100)) + "%");
 					} else if (worldGenerationShown) {
 						worldGenerationShown = false;
 
-						NetherBoardScoreboard.getInstance().clearGlobalLine(TCDeathSwapManager.GENERATION_LINE);
+						NetherBoardScoreboard.getInstance().clearGlobalLine(DeathSwapManager.GENERATION_LINE);
 					}
 				} catch (NoClassDefFoundError e) {
 					Log.fatal("TCDeathSwapManager", "Caught " + e.getClass().getName() + " in task. This probably means that DeathSwap is not installed on this server. This module will now disable due to this error");
-					ModuleManager.disable(TCDeathSwapManager.class);
+					ModuleManager.disable(DeathSwapManager.class);
 				}
 			}
 		}, 5L);

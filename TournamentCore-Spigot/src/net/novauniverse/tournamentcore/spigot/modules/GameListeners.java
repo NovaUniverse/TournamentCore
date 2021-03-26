@@ -9,7 +9,7 @@ import org.bukkit.event.Listener;
 
 import net.novauniverse.tournamentcore.spigot.TournamentCore;
 import net.novauniverse.tournamentcore.spigot.database.TournamentCoreDB;
-import net.novauniverse.tournamentcore.spigot.gamespecific.UHCManager;
+import net.novauniverse.tournamentcore.spigot.modules.gamespecific.UHCManager;
 import net.zeeraa.novacore.commons.log.Log;
 import net.zeeraa.novacore.spigot.language.LanguageManager;
 import net.zeeraa.novacore.spigot.module.ModuleManager;

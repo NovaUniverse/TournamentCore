@@ -1,4 +1,4 @@
-package net.novauniverse.tournamentcore.spigot.gamespecific;
+package net.novauniverse.tournamentcore.spigot.modules.gamespecific;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;

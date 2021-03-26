@@ -41,7 +41,9 @@ import net.novauniverse.tournamentcore.spigot.modules.TCPlayerListener;
 import net.novauniverse.tournamentcore.spigot.modules.TCScoreboard;
 import net.novauniverse.tournamentcore.spigot.modules.WinMessageListener;
 import net.novauniverse.tournamentcore.spigot.modules.YBorder;
-import net.novauniverse.tournamentcore.spigot.modules.gamespecific.TCDeathSwapManager;
+import net.novauniverse.tournamentcore.spigot.modules.gamespecific.SpleefManager;
+import net.novauniverse.tournamentcore.spigot.modules.gamespecific.UHCManager;
+import net.novauniverse.tournamentcore.spigot.modules.gamespecific.DeathSwapManager;
 import net.novauniverse.tournamentcore.spigot.pluginmessagelistener.TCPluginMessageListnener;
 import net.novauniverse.tournamentcore.spigot.score.ScoreListener;
 import net.novauniverse.tournamentcore.spigot.score.ScoreManager;
@@ -181,7 +183,9 @@ public class TournamentCore extends JavaPlugin implements Listener {
 		ModuleManager.loadModule(TCPlayerListener.class, true);
 
 		// Register modules
-		ModuleManager.loadModule(TCDeathSwapManager.class);
+		ModuleManager.loadModule(DeathSwapManager.class);
+		ModuleManager.loadModule(SpleefManager.class);
+		ModuleManager.loadModule(UHCManager.class);
 		ModuleManager.loadModule(PlayerHeadDrop.class);
 		ModuleManager.loadModule(EdibleHeads.class);
 		ModuleManager.loadModule(YBorder.class);
@@ -303,7 +307,12 @@ public class TournamentCore extends JavaPlugin implements Listener {
 	public void onGameLoaded(GameLoadedEvent e) {
 		if (e.getGame().getName().equalsIgnoreCase("deathswap")) {
 			Log.info("TournamentCore", "Enabling deathswap module");
-			ModuleManager.enable(TCDeathSwapManager.class);
+			ModuleManager.enable(DeathSwapManager.class);
+		}
+		
+		if (e.getGame().getName().equalsIgnoreCase("spleef")) {
+			Log.info("TournamentCore", "Enabling spleef module");
+			ModuleManager.enable(SpleefManager.class);
 		}
 	}
 }
