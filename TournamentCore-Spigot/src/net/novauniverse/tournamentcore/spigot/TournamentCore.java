@@ -10,12 +10,21 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import com.comphenix.protocol.PacketType;
+import com.comphenix.protocol.ProtocolLibrary;
+import com.comphenix.protocol.events.ListenerPriority;
+import com.comphenix.protocol.events.PacketAdapter;
+import com.comphenix.protocol.events.PacketEvent;
 import net.novauniverse.tournamentcore.commons.TournamentCoreCommons;
 import net.novauniverse.tournamentcore.spigot.command.database.DatabaseCommand;
 import net.novauniverse.tournamentcore.spigot.command.fly.FlyCommand;
@@ -68,6 +77,8 @@ public class TournamentCore extends JavaPlugin implements Listener {
 	private String lobbyServer;
 	private File sqlFixFile;
 	private String tournamentName;
+
+	private boolean preventDamageMobs;
 
 	// Initialize variables
 	@Override
@@ -168,14 +179,14 @@ public class TournamentCore extends JavaPlugin implements Listener {
 		// Scoreboard
 		ModuleManager.require(NetherBoardScoreboard.class);
 
-		NetherBoardScoreboard.getInstance().setDefaultTitle(ChatColor.translateAlternateColorCodes('§', tournamentName));
+		NetherBoardScoreboard.getInstance().setDefaultTitle(ChatColor.translateAlternateColorCodes('&', tournamentName));
 		NetherBoardScoreboard.getInstance().setLineCount(15);
 
 		// Register modules and enable them
 		ModuleManager.loadModule(PlayerNameCache.class, true);
 		ModuleManager.loadModule(PlayerKillCache.class, true);
 		ModuleManager.loadModule(NoEnderPearlDamage.class, true);
-		
+
 		ModuleManager.loadModule(TCLeaderboard.class, true);
 		ModuleManager.loadModule(ScoreManager.class, true);
 		ModuleManager.loadModule(GoldenHead.class, true);
@@ -194,10 +205,10 @@ public class TournamentCore extends JavaPlugin implements Listener {
 		CommandRegistry.registerCommand(new HaltCommand());
 		CommandRegistry.registerCommand(new InvseeCommand());
 		CommandRegistry.registerCommand(new TopCommand());
-		
+
 		if (NovaCore.isNovaGameEngineEnabled()) {
 			Bukkit.getServer().getPluginManager().registerEvents(new GameEventListeners(), this);
-			
+
 			ModuleManager.loadModule(UHCManager.class);
 			ModuleManager.loadModule(DeathSwapManager.class);
 			ModuleManager.loadModule(SpleefManager.class);
@@ -222,6 +233,10 @@ public class TournamentCore extends JavaPlugin implements Listener {
 		if (getConfig().getBoolean("lobby_enabled")) {
 			ModuleManager.enable(TCLobby.class);
 
+			if (getConfig().getBoolean("prevent_damage_mobs")) {
+				preventDamageMobs = true;
+			}
+
 			Location lobbyLocation = new Location(Bukkit.getServer().getWorlds().get(0), getConfig().getDouble("spawn_x"), getConfig().getDouble("spawn_y"), getConfig().getDouble("spawn_z"), (float) getConfig().getDouble("spawn_yaw"), (float) getConfig().getDouble("spawn_pitch"));
 			TCLobby.getInstance().setLobbyLocation(lobbyLocation);
 
@@ -242,9 +257,17 @@ public class TournamentCore extends JavaPlugin implements Listener {
 			CommandRegistry.registerCommand(new DuelCommand());
 		}
 
+		if (getConfig().getBoolean("show_hardcore_hearts")) {
+			ProtocolLibrary.getProtocolManager().addPacketListener(new PacketAdapter(this, ListenerPriority.NORMAL, PacketType.Play.Server.LOGIN) {
+				@Override
+				public void onPacketSending(PacketEvent event) {
+					event.getPacket().getBooleans().write(0, true);
+				}
+			});
+		}
+
 		if (NovaCore.isNovaGameEngineEnabled()) {
 			// Combat tag message
-			
 
 			// Check if game is enabled
 			if (getConfig().getBoolean("game_enabled")) {
@@ -258,9 +281,9 @@ public class TournamentCore extends JavaPlugin implements Listener {
 
 		this.getServer().getMessenger().registerOutgoingPluginChannel(this, "TCData");
 		this.getServer().getMessenger().registerIncomingPluginChannel(this, "TCData", new TCPluginMessageListnener());
-		
+
 		new BukkitRunnable() {
-			
+
 			@Override
 			public void run() {
 				Log.info("TournamentCore", "NovaCore#isNovaGameEngineEnabled(): " + NovaCore.isNovaGameEngineEnabled());
@@ -283,6 +306,15 @@ public class TournamentCore extends JavaPlugin implements Listener {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
+		}
+	}
+
+	@EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
+	public void onEntityDamageEvent(EntityDamageEvent e) {
+		if (preventDamageMobs) {
+			if (!(e.getEntity() instanceof Player)) {
+				e.setCancelled(true);
+			}
 		}
 	}
 

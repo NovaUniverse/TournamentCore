@@ -76,9 +76,13 @@ lobby_team_leaderboard:
     x: 0.0
     y: 0.0
     z: 0.0
+    
+prevent_damage_mobs: false
 
 # ===========================
 # -=-=-= Game settings =-=-=-
 # ===========================
 
 game_enabled: false
+
+show_hardcore_hearts: false

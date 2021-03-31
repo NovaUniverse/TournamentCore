@@ -105,6 +105,11 @@
 			<id>codemc-repo</id>
 			<url>https://repo.codemc.io/repository/maven-public/</url>
 		</repository>
+
+		<repository>
+			<id>dmulloy2-repo</id>
+			<url>https://repo.dmulloy2.net/repository/public/</url>
+		</repository>
 	</repositories>
 
 	<dependencyManagement>
@@ -142,7 +147,12 @@
 			<scope>compile</scope>
 		</dependency>
 
-		<!-- https://mvnrepository.com/artifact/commons-io/commons-io -->
+		<dependency>
+			<groupId>com.comphenix.protocol</groupId>
+			<artifactId>ProtocolLib</artifactId>
+			<version>4.6.0</version>
+		</dependency>
+
 		<dependency>
 			<groupId>commons-io</groupId>
 			<artifactId>commons-io</artifactId>
@@ -156,7 +166,7 @@
 			<version>1.1.0-SNAPSHOT</version>
 			<scope>provided</scope>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>net.zeeraa.novacore</groupId>
 			<artifactId>novacore-gameengine</artifactId>
@@ -170,7 +180,7 @@
 			<version>1.0.0-SNAPSHOT</version>
 			<scope>provided</scope>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>net.novauniverse</groupId>
 			<artifactId>NovaSpleef</artifactId>

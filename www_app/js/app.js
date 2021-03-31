@@ -35,7 +35,7 @@ $(function () {
 	});
 
 	$("#link_team_editor").on("click", function () {
-		window.open("/app/team_editor/");
+		window.location = "/app/team_editor/";
 	});
 
 	$("#link_start_game").on("click", function () {
@@ -127,7 +127,8 @@ $(function () {
 	$("#btn_rename_tournament").on("click", function() {
 		let newName = $("#tournament_name_input").val();
 		if(confirm("You are about to rename the tournament to " + newName + ". This will require a restart to apply all changes")) {
-			$.getJSON("/api/set_tournament_name?name=" + encodeURI(newName), function(data) {
+			console.log(encodeURIComponent(newName));
+			$.getJSON("/api/set_tournament_name/", { name: encodeURIComponent(newName) }, function(data) {
 				if(data.success) {
 					showInfo("Tournament renamed. Please restart the servers to apply");
 				} else {
