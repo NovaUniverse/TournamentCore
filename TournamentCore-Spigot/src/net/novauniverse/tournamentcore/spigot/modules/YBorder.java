@@ -60,7 +60,6 @@ public class YBorder extends NovaModule implements Listener {
 			public void run() {
 				if (yLimit > 0) {
 					yLimit--;
-
 				}
 
 				color = !color;

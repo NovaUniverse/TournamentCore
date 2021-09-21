@@ -11,7 +11,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 
-import net.novauniverse.tournamentcore.spigot.modules.PlayerKillCache;
+import net.novauniverse.tournamentcore.spigot.modules.cache.PlayerKillCache;
 import net.novauniverse.tournamentcore.team.TournamentCoreTeam;
 import net.zeeraa.novacore.commons.log.Log;
 import net.zeeraa.novacore.spigot.module.modules.game.GameManager;

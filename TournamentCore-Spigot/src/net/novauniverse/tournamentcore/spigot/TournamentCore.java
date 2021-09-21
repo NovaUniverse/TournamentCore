@@ -29,7 +29,7 @@ import net.novauniverse.tournamentcore.commons.TournamentCoreCommons;
 import net.novauniverse.tournamentcore.spigot.command.database.DatabaseCommand;
 import net.novauniverse.tournamentcore.spigot.command.fly.FlyCommand;
 import net.novauniverse.tournamentcore.spigot.command.halt.HaltCommand;
-import net.novauniverse.tournamentcore.spigot.command.invsee.InvseeCommand;
+import net.novauniverse.tournamentcore.spigot.command.purgecache.PurgeCacheCommand;
 import net.novauniverse.tournamentcore.spigot.command.top.TopCommand;
 import net.novauniverse.tournamentcore.spigot.gamesetup.GameSetupProcess;
 import net.novauniverse.tournamentcore.spigot.leaderboard.TCLeaderboard;
@@ -43,12 +43,13 @@ import net.novauniverse.tournamentcore.spigot.modules.GameListeners;
 import net.novauniverse.tournamentcore.spigot.modules.GoldenHead;
 import net.novauniverse.tournamentcore.spigot.modules.NoEnderPearlDamage;
 import net.novauniverse.tournamentcore.spigot.modules.PlayerHeadDrop;
-import net.novauniverse.tournamentcore.spigot.modules.PlayerKillCache;
-import net.novauniverse.tournamentcore.spigot.modules.PlayerNameCache;
 import net.novauniverse.tournamentcore.spigot.modules.TCPlayerListener;
 import net.novauniverse.tournamentcore.spigot.modules.TCScoreboard;
+import net.novauniverse.tournamentcore.spigot.modules.TCTabTitle;
 import net.novauniverse.tournamentcore.spigot.modules.WinMessageListener;
 import net.novauniverse.tournamentcore.spigot.modules.YBorder;
+import net.novauniverse.tournamentcore.spigot.modules.cache.PlayerKillCache;
+import net.novauniverse.tournamentcore.spigot.modules.cache.PlayerNameCache;
 import net.novauniverse.tournamentcore.spigot.modules.gamespecific.SpleefManager;
 import net.novauniverse.tournamentcore.spigot.modules.gamespecific.UHCManager;
 import net.novauniverse.tournamentcore.spigot.modules.gamespecific.DeathSwapManager;
@@ -198,13 +199,16 @@ public class TournamentCore extends JavaPlugin implements Listener {
 		ModuleManager.loadModule(EdibleHeads.class);
 		ModuleManager.loadModule(YBorder.class);
 		ModuleManager.loadModule(TCLobby.class);
+		ModuleManager.loadModule(TCTabTitle.class, true);
 
 		// Commands
 		CommandRegistry.registerCommand(new DatabaseCommand());
 		CommandRegistry.registerCommand(new FlyCommand());
 		CommandRegistry.registerCommand(new HaltCommand());
-		CommandRegistry.registerCommand(new InvseeCommand());
 		CommandRegistry.registerCommand(new TopCommand());
+		CommandRegistry.registerCommand(new PurgeCacheCommand());
+		// CommandRegistry.registerCommand(new InvseeCommand()); /* Deprecated. Now a
+		// part of NovaUtils*/
 
 		if (NovaCore.isNovaGameEngineEnabled()) {
 			Bukkit.getServer().getPluginManager().registerEvents(new GameEventListeners(), this);

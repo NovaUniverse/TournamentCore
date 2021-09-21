@@ -5,6 +5,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import net.novauniverse.tournamentcore.spigot.TournamentCore;
+import net.novauniverse.tournamentcore.spigot.modules.cache.PlayerKillCache;
 import net.novauniverse.tournamentcore.spigot.score.ScoreManager;
 import net.novauniverse.tournamentcore.team.TournamentCoreTeam;
 import net.novauniverse.tournamentcore.team.TournamentCoreTeamManager;

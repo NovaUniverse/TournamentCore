@@ -1,4 +1,4 @@
-package net.novauniverse.tournamentcore.spigot.modules;
+package net.novauniverse.tournamentcore.spigot.modules.cache;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -17,7 +17,7 @@ import net.novauniverse.tournamentcore.spigot.TournamentCore;
 import net.zeeraa.novacore.commons.log.Log;
 import net.zeeraa.novacore.spigot.module.NovaModule;
 
-public class PlayerKillCache extends NovaModule implements Listener {
+public class PlayerKillCache extends NovaModule implements Listener, TCDataCache {
 	private static PlayerKillCache instance;
 
 	private HashMap<UUID, Integer> cache;
@@ -94,6 +94,7 @@ public class PlayerKillCache extends NovaModule implements Listener {
 		return kills;
 	}
 
+	@Override
 	public void clearCache() {
 		Log.trace("Clearing player kill cache");
 		cache.clear();

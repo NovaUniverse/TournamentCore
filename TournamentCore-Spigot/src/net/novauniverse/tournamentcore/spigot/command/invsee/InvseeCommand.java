@@ -10,6 +10,12 @@ import net.novauniverse.tournamentcore.spigot.TournamentCore;
 import net.zeeraa.novacore.spigot.command.AllowedSenders;
 import net.zeeraa.novacore.spigot.command.NovaCommand;
 
+/**
+ * Deprecated. Now part of NovaUtils
+ * 
+ * @author Zeeraa
+ */
+@Deprecated
 public class InvseeCommand extends NovaCommand {
 	public InvseeCommand() {
 		super("invsee", TournamentCore.getInstance());
@@ -17,9 +23,9 @@ public class InvseeCommand extends NovaCommand {
 		setPermission("tournamentcore.command.invsee");
 		setPermissionDefaultValue(PermissionDefault.OP);
 		setAllowedSenders(AllowedSenders.PLAYERS);
-		
+
 		addHelpSubCommand();
-		
+
 		this.setFilterAutocomplete(true);
 	}
 

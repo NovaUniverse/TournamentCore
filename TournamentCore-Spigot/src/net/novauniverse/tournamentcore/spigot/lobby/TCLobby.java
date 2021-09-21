@@ -27,6 +27,7 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
 import me.rayzr522.jsonmessage.JSONMessage;
@@ -233,7 +234,15 @@ public class TCLobby extends NovaModule implements Listener {
 		}
 		p.setFallDistance(0);
 		p.setGameMode(GameMode.ADVENTURE);
-
+		
+		new BukkitRunnable() {
+			@Override
+			public void run() {
+				// Fix but where gamemode does not get set
+				p.setGameMode(GameMode.CREATIVE);
+				p.setGameMode(GameMode.ADVENTURE);
+			}
+		}.runTaskLater(TournamentCore.getInstance(), 5L);
 	}
 
 	@EventHandler(priority = EventPriority.MONITOR)

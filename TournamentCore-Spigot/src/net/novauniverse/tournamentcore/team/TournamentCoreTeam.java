@@ -2,7 +2,7 @@ package net.novauniverse.tournamentcore.team;
 
 import org.bukkit.ChatColor;
 
-import net.novauniverse.tournamentcore.spigot.modules.PlayerNameCache;
+import net.novauniverse.tournamentcore.spigot.modules.cache.PlayerNameCache;
 import net.zeeraa.novacore.spigot.teams.Team;
 
 public class TournamentCoreTeam extends Team {
