@@ -2,23 +2,23 @@
 	"language_code": "en-us",
 	"language_name": "English",
 	"content": {
-		"tournamentcore.command.top.can_use_again": "§aYou can now use /top again",
-		"tournamentcore.command.top.nether": "§cYou can't use /top in the nether",
-		"tournamentcore.command.top.spectator": "§cSpectators can't use /top",
-		"tournamentcore.command.top.disabled.world": "§cYou can't use /top in this world",
-		"tournamentcore.command.top.disabled": "§c/top is not enabled right now",
-		"tournamentcore.command.top.failed": "§cCould not find an empty space to teleport to",
-		"tournamentcore.command.top.wait": "§cPlease wait %s seconds before using this command again",
+		"tournamentcore.command.top.can_use_again": "ï¿½aYou can now use /top again",
+		"tournamentcore.command.top.nether": "ï¿½cYou can't use /top in the nether",
+		"tournamentcore.command.top.spectator": "ï¿½cSpectators can't use /top",
+		"tournamentcore.command.top.disabled.world": "ï¿½cYou can't use /top in this world",
+		"tournamentcore.command.top.disabled": "ï¿½c/top is not enabled right now",
+		"tournamentcore.command.top.failed": "ï¿½cCould not find an empty space to teleport to",
+		"tournamentcore.command.top.wait": "ï¿½cPlease wait %s seconds before using this command again",
 		
-		"tournamentcore.command.reconnect.connecting": "§aConnecting to the server...",
-		"tournamentcore.command.reconnect.no_game": "§cThere is no active game right now",
+		"tournamentcore.command.reconnect.connecting": "ï¿½aConnecting to the server...",
+		"tournamentcore.command.reconnect.no_game": "ï¿½cThere is no active game right now",
 		
-		"tournamentcore.game.elimination.team.eliminated": "§c§lTeam Eliminated> %s§l%s §6§l%s place",
-		"tournamentcore.game.sending_you_to_lobby_10_seconds": "§bSending you to the lobby in 10 seconds",
-		"tournamentcore.game.server.restarting": "§b%s server restarting, Please reconnect",
+		"tournamentcore.game.elimination.team.eliminated": "ï¿½cï¿½lTeam Eliminated> %sï¿½l%s ï¿½6ï¿½l%s place",
+		"tournamentcore.game.sending_you_to_lobby_10_seconds": "ï¿½bSending you to the lobby in 10 seconds",
+		"tournamentcore.game.server.restarting": "ï¿½b%s server restarting, Please reconnect",
 		
-		"tournamentcore.game.gameover.winner.player": "§a§lGAME OVER> §6§lWinning player: %s§l%s",
-		"tournamentcore.game.gameover.winner.team": "§a§lGAME OVER> §6§lWinning team: %s§l%s",
+		"tournamentcore.game.gameover.winner.player": "ï¿½aï¿½lGAME OVER> ï¿½6ï¿½lWinning player: %sï¿½l%s",
+		"tournamentcore.game.gameover.winner.team": "ï¿½aï¿½lGAME OVER> ï¿½6ï¿½lWinning team: %sï¿½l%s",
 		
 		"tournamentcore.scoreboard.score": "Score: ",
 		"tournamentcore.scoreboard.kills": "Kills: ",
@@ -27,14 +27,14 @@
 		"tournamentcore.scoreboard.starting_in": "Starting in: ",
 		"tournamentcore.scoreboard.average_tps": "Average TPS: ",
 		
-		"tournamentcore.yborder.start": "§c§lHeight limit is decreasing. You will take damage if you go above the Y level limit",
-		"tournamentcore.yborder.remove": "§c§lHeight limit has been removed",
-		"tournamentcore.yborder.above_limit.warning": "§c§lYou are above the height limit of Y: %s. You will continue to take damage until you get below the limit",
-		"tournamentcore.yborder.above_limit.info": "§c§l%s blocks above the height limit",
+		"tournamentcore.yborder.start": "ï¿½cï¿½lHeight limit is decreasing. You will take damage if you go above the Y level limit",
+		"tournamentcore.yborder.remove": "ï¿½cï¿½lHeight limit has been removed",
+		"tournamentcore.yborder.above_limit.warning": "ï¿½cï¿½lYou are above the height limit of Y: %s. You will continue to take damage until you get below the limit",
+		"tournamentcore.yborder.above_limit.info": "ï¿½cï¿½l%s blocks above the height limit",
 		
 		
-		"tournamentcore.nether_disabled": "§cNether is disabled",
+		"tournamentcore.nether_disabled": "ï¿½cNether is disabled",
 		
-		"tournamentcore.game.tracker.tracking_player": "§aTracking player §b%s"
+		"tournamentcore.game.tracker.tracking_player": "ï¿½aTracking player ï¿½b%s"
 	}
 }

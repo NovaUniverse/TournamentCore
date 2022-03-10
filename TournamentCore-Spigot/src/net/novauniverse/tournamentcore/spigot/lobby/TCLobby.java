@@ -220,9 +220,9 @@ public class TCLobby extends NovaModule implements Listener {
 	@EventHandler(priority = EventPriority.LOW)
 	public void onPlayerJoin(PlayerJoinEvent e) {
 		Player p = e.getPlayer();
-		
+
 		// Prevent the press e to open inventory message from showing all the time
-		if(!p.hasAchievement(Achievement.OPEN_INVENTORY)) {
+		if (!p.hasAchievement(Achievement.OPEN_INVENTORY)) {
 			p.awardAchievement(Achievement.OPEN_INVENTORY);
 		}
 
@@ -234,7 +234,7 @@ public class TCLobby extends NovaModule implements Listener {
 		}
 		p.setFallDistance(0);
 		p.setGameMode(GameMode.ADVENTURE);
-		
+
 		new BukkitRunnable() {
 			@Override
 			public void run() {
@@ -344,25 +344,23 @@ public class TCLobby extends NovaModule implements Listener {
 	// sorry, i just had to
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onAsyncPlayerChat(AsyncPlayerChatEvent e) {
-		if (e.getMessage().equalsIgnoreCase("fus ro dah") || e.getMessage().equalsIgnoreCase("yeet")) {
+		if (e.getMessage().equalsIgnoreCase("fus ro dah")) {
 			Player player = e.getPlayer();
-			if (player.getUniqueId().toString().equalsIgnoreCase("22a9eca8-2221-4bc9-b463-de0f3a0cc652") || player.getUniqueId().toString().equalsIgnoreCase("5203face-89ca-49b7-a5a0-f2cf0fe230e7")) {
-				player.getLocation().getWorld().playSound(player.getLocation(), Sound.EXPLODE, 1, 1);
-				for (Player player2 : Bukkit.getServer().getOnlinePlayers()) {
-					if (player2.getWorld() != player.getWorld()) {
-						continue;
-					}
+			player.getLocation().getWorld().playSound(player.getLocation(), Sound.EXPLODE, 1, 1);
+			for (Player player2 : Bukkit.getServer().getOnlinePlayers()) {
+				if (player2.getWorld() != player.getWorld()) {
+					continue;
+				}
 
-					Vector toPlayer2 = player2.getLocation().toVector().subtract(player.getLocation().toVector());
+				Vector toPlayer2 = player2.getLocation().toVector().subtract(player.getLocation().toVector());
 
-					Vector direction = player.getLocation().getDirection();
+				Vector direction = player.getLocation().getDirection();
 
-					double dot = toPlayer2.normalize().dot(direction);
+				double dot = toPlayer2.normalize().dot(direction);
 
-					if (player.getLocation().distance(player2.getLocation()) < 12) {
-						if (dot > 0.90) {
-							player2.setVelocity(direction.multiply(4 - (player.getLocation().distance(player2.getLocation()) / 4)));
-						}
+				if (player.getLocation().distance(player2.getLocation()) < 12) {
+					if (dot > 0.90) {
+						player2.setVelocity(direction.multiply(4 - (player.getLocation().distance(player2.getLocation()) / 4)));
 					}
 				}
 			}

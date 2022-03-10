@@ -129,19 +129,19 @@ public class TournamentCore extends JavaPlugin implements Listener {
 		}
 
 		// Setup win score
-		int[] winScore;
-		String winScoreString = "Win score: ";
+				int[] winScore;
+				String winScoreString = "Win score: ";
 
-		@SuppressWarnings("unchecked")
-		List<Integer> winScoreList = (List<Integer>) getConfig().getList("win_score");
+				@SuppressWarnings("unchecked")
+				List<Integer> winScoreList = (List<Integer>) getConfig().getList("win_score");
 
-		winScore = new int[winScoreList.size()];
-		for (int i = 0; i < winScoreList.size(); i++) {
-			winScore[i] = winScoreList.get(i);
-			winScoreString += winScore[i] + (i < (winScore.length - 1) ? ", " : " ");
-		}
+				winScore = new int[winScoreList.size()];
+				for (int i = 0; i < winScoreList.size(); i++) {
+					winScore[i] = winScoreList.get(i);
+					winScoreString += winScore[i] + (i < (winScore.length - 1) ? ", " : " ");
+				}
 
-		Log.info("TournamentCore", winScoreString);
+				Log.info("TournamentCore", winScoreString);
 
 		// Require NetherBoardScoreboard
 		if (ModuleManager.isDisabled(NetherBoardScoreboard.class)) {
@@ -149,21 +149,21 @@ public class TournamentCore extends JavaPlugin implements Listener {
 		}
 
 		// Connect to the database
-		DBCredentials dbCredentials = new DBCredentials(getConfig().getString("mysql.driver"), getConfig().getString("mysql.host"), getConfig().getString("mysql.username"), getConfig().getString("mysql.password"), getConfig().getString("mysql.database"));
+				DBCredentials dbCredentials = new DBCredentials(getConfig().getString("mysql.driver"), getConfig().getString("mysql.host"), getConfig().getString("mysql.username"), getConfig().getString("mysql.password"), getConfig().getString("mysql.database"));
 
-		try {
-			DBConnection connection = new DBConnection();
-			connection.connect(dbCredentials);
+				try {
+					DBConnection connection = new DBConnection();
+					connection.connect(dbCredentials);
 
-			TournamentCoreCommons.setDBConnection(connection);
+					TournamentCoreCommons.setDBConnection(connection);
 
-			connection.startKeepAliveTask();
-		} catch (ClassNotFoundException | SQLException e) {
-			Log.fatal("TournamentCore", "Failed to connect to the database");
-			e.printStackTrace();
-			Bukkit.getPluginManager().disablePlugin(this);
-			return;
-		}
+					connection.startKeepAliveTask();
+				} catch (ClassNotFoundException | SQLException e) {
+					Log.fatal("TournamentCore", "Failed to connect to the database");
+					e.printStackTrace();
+					Bukkit.getPluginManager().disablePlugin(this);
+					return;
+				}
 
 		// Get tournament name
 		tournamentName = TournamentCoreCommons.getTournamentName();
